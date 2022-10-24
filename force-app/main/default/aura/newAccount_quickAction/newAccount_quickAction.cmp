@@ -1,0 +1,8 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global">
+<aura:attribute name="className" type="string"></aura:attribute>
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div class="{!v.className}">
+    <!--c:recordForm isNew="true" objectApiName="Account" onclose="{!c.closeQA}" onnewobject="{!c.handleNewObject}"></c:recordForm-->
+    <c:wizardContent></c:wizardContent>
+    </div>
+</aura:component>

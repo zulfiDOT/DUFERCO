@@ -1,0 +1,10 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global" >
+    
+    <aura:attribute name="destinationurl" type="String" default="" access="global" />
+    <aura:attribute name="buttontext" type="String" default="" access="global" />
+    
+    <div style="margin: 20px;">
+        <a style="background-color: #00cc5d; color: #fff; border-radius: 0.3em; padding: 0.8em 1.8em; text-decoration: none;" href="{!v.destinationurl}">{!v.buttontext}</a>
+    </div>
+    
+</aura:component>

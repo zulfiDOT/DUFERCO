@@ -1,0 +1,4 @@
+<design:component label="Print Button">
+	<design:attribute name="destinationurl" label="Destination URL" description="URL di destinazione del bottone" />
+    <design:attribute name="buttontext" label="Button Text" description="Testo visualizzato all'interno del bottone" />
+</design:component>

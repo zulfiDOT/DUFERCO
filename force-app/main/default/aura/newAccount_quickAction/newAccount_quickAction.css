@@ -1,0 +1,11 @@
+.THIS .scrollHorizontal{
+    overflow :scroll; 
+}
+.THIS .alignTextPopUp{
+    text-align: center; 
+}
+
+.THIS.addPadding {
+    padding-left:20rem;
+    padding-right: 20rem;
+}

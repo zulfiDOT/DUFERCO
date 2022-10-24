@@ -1,0 +1,42 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global">
+    <aura:html tag="style">
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }
+        .slds-modal__container {
+        width: 70% !important;
+        height: 100% !important;
+        max-width: 70rem !important;
+        }
+        .forceChatterPublisherPresentationMobile .cuf-scroller-inside {
+        padding-top: 0px !important;
+        }
+        .slds-card {
+        margin-top: 65px !important;
+        }
+        .slds-modal__content {
+            height: unset !important;
+            max-height: unset !important;
+            }
+    </aura:html>
+    <aura:attribute name="quoteId" type="string"></aura:attribute>
+    <aura:attribute name="disableBtn" type="boolean" default="true"></aura:attribute>
+    <aura:attribute name="disableLeftBtn" type="boolean" default="false"></aura:attribute>
+    <aura:attribute name="buttonRightLabel" type="string" default="Salva"></aura:attribute>
+    <aura:attribute name="buttonLeftLabel" type="string" default="Annulla"></aura:attribute>
+    <lightning:messageChannel type="EnableButton__c" aura:id="recordSelected" onMessage="{!c.handleMessage}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div class="slds-modal__header">
+        <h2 class="slds-modal__title slds-hyphenate">Billing Profile</h2>
+    </div>
+
+    <c:billingProfileWizard aura:id="addBilling" recordId="{!v.quoteId}" onsuccessinsert="{!c.close}" ondisablebutton="{!c.handleButton}" onclose="{!c.close}"></c:billingProfileWizard>
+
+    <footer class="slds-col modal-footer slds-modal__footer">
+        <lightning:button variant="neutral" label="{!v.buttonLeftLabel}" onclick="{!c.preavious}" disabled="{!v.disableLeftBtn}"></lightning:button>
+        <lightning:button variant="brand" label="{!v.buttonRightLabel}" onclick="{!c.save}" disabled="{!v.disableBtn}" class="slds-m-left_x-small"></lightning:button>
+    </footer>
+</aura:component>
