@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SFCustomerCode__c</fullName>
+    <displayFormat>CL-{000000}</displayFormat>
+    <externalId>false</externalId>
+    <label>Codice Cliente Salesforce</label>
+    <trackHistory>false</trackHistory>
+    <type>AutoNumber</type>
+</CustomField>

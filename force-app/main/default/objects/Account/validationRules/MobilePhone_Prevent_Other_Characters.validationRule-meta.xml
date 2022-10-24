@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MobilePhone_Prevent_Other_Characters</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(NOT(ISBLANK(PersonMobilePhone)),NOT(REGEX(PersonMobilePhone, &quot;^[0-9]+$&quot;)))</errorConditionFormula>
+    <errorDisplayField>PersonMobilePhone</errorDisplayField>
+    <errorMessage>Assicurarsi di inserire solo caratteri numerici</errorMessage>
+</ValidationRule>

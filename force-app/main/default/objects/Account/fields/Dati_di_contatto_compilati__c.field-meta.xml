@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Dati_di_contatto_compilati__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(
+  AND(
+    ISBLANK(Email__c),
+    ISBLANK(Phone),
+    ISBLANK(Phone2__c)
+  ),
+  IMAGE(&apos;/resource/1633099294000/redicon?&apos;, &apos;red-icon&apos;, 20, 20),
+  IMAGE(&apos;/resource/1633093212000/greenicon?&apos;, &apos;green-icon&apos;, 20, 20))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Dati di contatto compilati</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

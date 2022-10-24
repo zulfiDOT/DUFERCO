@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ControlChangedFieldIntegration</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(NOT($User.IntegrationUser__c), NOT($Profile.Name == &apos;System Administrator&apos;), NOT($Profile.Name == &apos;Amministratore di sistema&apos;),
+OR(ISCHANGED(Name),
+ISCHANGED(VatNumber__c),
+ISCHANGED(FiscalCode__c),
+ISCHANGED(Agency__c),
+ISCHANGED(AgentId__c),
+ISCHANGED(Industry),
+ISCHANGED(RecordTypeId),
+ISCHANGED(FormaAnagrafica__c),
+ISCHANGED(Nation__c)))</errorConditionFormula>
+    <errorMessage>Non hai i permessi necessari per effettuare la modifica</errorMessage>
+</ValidationRule>

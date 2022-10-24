@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Nome_Rappresentante_Legale__c</fullName>
+    <externalId>false</externalId>
+    <formula>Rappresentante_legale__r.FirstName &amp; &quot; &quot; &amp;  Rappresentante_legale__r.LastName</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Nome Rappresentante Legale</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

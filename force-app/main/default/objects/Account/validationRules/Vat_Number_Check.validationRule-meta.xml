@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Vat_Number_Check</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  NOT(ISBLANK(VatNumber__c)),
+  OR(NOT(ISNUMBER(VatNumber__c)),LEN(VatNumber__c)&lt;11),
+  ISPICKVAL(Nation__c,&apos;IT&apos;)
+)</errorConditionFormula>
+    <errorDisplayField>VatNumber__c</errorDisplayField>
+    <errorMessage>Partita Iva non valida</errorMessage>
+</ValidationRule>
