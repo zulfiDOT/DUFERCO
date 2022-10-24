@@ -1,0 +1,59 @@
+<template>
+  <lightning-record-edit-form object-api-name="Address__c" onsuccess={handleSuccess} onerror={handleError}>
+    <!--lightning-messages></lightning-messages-->
+    <c-advanced-map-lookup onselectaddress={handleAddressSelection}></c-advanced-map-lookup>
+    <div class="slds-box slds-box_xx-small slds-form_horizontal slds-form slds-grid slds-wrap">
+      <!--div class="slds-col slds-size_1-of-2"-->
+      <lightning-input-field value={accountId} field-name="AccountId__c" class="slds-size_1-of-2"
+        disabled={disableAccount} required></lightning-input-field>
+      <lightning-input-field field-name="Type__c" class="slds-size_1-of-2" value={type} disabled={typeReadOnly}
+        required></lightning-input-field>
+      <lightning-input-field field-name="StreetName__c" value={address.route} required class="slds-size_1-of-2">
+      </lightning-input-field>
+      <lightning-input-field field-name="City__c" value={address.city} required class="slds-size_1-of-2">
+      </lightning-input-field>
+      <lightning-input-field field-name="StreetNumber__c" value={address.street_number} required
+        class="slds-size_1-of-2"></lightning-input-field>
+      <lightning-input-field field-name="Province__c" value={address.province} required class="slds-size_1-of-2">
+      </lightning-input-field>
+      <lightning-input-field field-name="ZipCode__c" value={address.postal_code} required class="slds-size_1-of-2">
+      </lightning-input-field>
+      <lightning-input-field field-name="Country__c" value={address.country} required class="slds-size_1-of-2">
+      </lightning-input-field>
+      <lightning-input-field field-name="Hamlet__c" value={locality} class="slds-size_1-of-2">
+      </lightning-input-field>
+      <lightning-input-field field-name="At__c" class="slds-size_1-of-2"></lightning-input-field>
+      <lightning-input-field field-name="Note__c" class="slds-size_1-of-2"></lightning-input-field>
+    </div>
+
+    <div class="slds-var-p-around_medium slds-align_absolute-center">
+      <template if:false={hideButton}>
+        <lightning-button variant="brand" type="button" label="Annulla" onclick={cancel}></lightning-button>
+        <lightning-button variant="brand" type="submit" label="Salva" class="slds-m-left_x-small"></lightning-button>
+      </template>
+    </div>
+    <template if:true={isLoading}>
+      <lightning-spinner size="medium" style="background-color: unset;"></lightning-spinner>
+    </template>
+
+  </lightning-record-edit-form>
+
+  <!--lightning-card title="Address Lookup using Google Maps Places API">
+             <lightning-input-address  address-label="Shipping Address"
+                street-label="Street"
+                city-label="City"
+                country-label="Country"
+                province-label="Province"
+                postal-code-label="PostalCode"
+                street=""
+                city=""
+                country=""
+                province=""
+                postal-code=""
+                required
+                onchange={addressInputChange}
+                field-level-help="Select Shipping Address"
+                show-address-lookup>
+             </lightning-input-address>
+          </lightning-card-->
+</template>

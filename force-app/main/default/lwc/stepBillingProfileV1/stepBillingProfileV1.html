@@ -1,0 +1,48 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner size="medium" alternative-text="Loading" style="background-color: unset;"></lightning-spinner>
+    </template>
+    <lightning-layout>
+        <lightning-layout-item size="1" flexibility="auto"></lightning-layout-item>
+        <lightning-layout-item size="10" flexibility="auto" padding="around-medium">
+        <lightning-record-edit-form object-api-name="BillingProfile__c" onsuccess={handleSuccess} onerror={handleError}>
+            <lightning-messages></lightning-messages>
+            <div class="slds-box slds-box_medium">
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1"> 
+                        <div class="slds-grid slds-size_1-of-2"> 
+                            <lightning-input-field field-name="AccountId__c" value={account.Id} disabled required></lightning-input-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1"> 
+                        <lightning-input-field field-name="PaymentConditions__c" required></lightning-input-field>
+                        <lightning-input-field field-name="SdiCode__c" value={account.sdiCode} disabled={isPerson}></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1"> 
+                        <lightning-input-field field-name="PECEmail__c" value={account.pec}></lightning-input-field>
+                        <lightning-input-field field-name="BillingEmail__c" value={account.email}></lightning-input-field>
+                    </div>
+                </div>
+                <template if:true={isPA}>
+                    <div class="slds-form__row">
+                        <div class="slds-grid slds-size_1-of-1"> 
+                            <lightning-input-field field-name="CIGCode__c"></lightning-input-field>
+                            <lightning-input-field field-name="CUPCode__c"></lightning-input-field>
+                        </div>
+                    </div>
+                    <div class="slds-form__row">
+                        <div class="slds-grid slds-size_1-of-2"> 
+                            <lightning-input-field field-name="RecipientCode__c"></lightning-input-field>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </lightning-record-edit-form>
+        </lightning-layout-item>
+        <lightning-layout-item size="1" flexibility="auto"></lightning-layout-item>
+        </lightning-layout>
+</template>

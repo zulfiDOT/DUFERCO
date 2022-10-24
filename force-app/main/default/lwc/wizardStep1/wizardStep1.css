@@ -1,0 +1,7 @@
+.show {
+    display: block;
+    color: var(--lwc-colorTextError,rgb(234, 0, 30));
+}
+.hide {
+    display: none;
+}

@@ -1,0 +1,28 @@
+<template>
+    <lightning-card>
+        <!--c-progress-bar steps={steps} type="bar" current-step={current} ></c-progress-bar>
+        <c-progress-bar steps={steps} type="indicator" current-step={current} ></c-progress-bar-->
+        <c-progress-bar steps={steps} type="path" current-step={current} ></c-progress-bar>
+        <template if:true={step1}>
+            <c-wizard-step1 onnext={handleNext} field-value={fieldValueContent} onhandleradio={handleRadioBtn} oninputchange={handleInputChange}
+                            rt-boolean={rtBoolean}>/</c-wizard-step1>
+        </template>
+        <template if:true={step2}>
+            <template if:true={accountId}>
+                <c-wizard-step2 account-id={accountId} onnext={handleNext} onpreavious={handlePreavious} rt-boolean={rtBoolean}>/</c-wizard-step2>
+            </template>
+            <template if:false={accountId}>       
+                <template if:true={accDatamax}>
+                    <c-account-datamax-form account-datamax={accDatamax} field-preavius-step={fieldValueContent} onpreavious={handlePreavious} onnext={handleNext}></c-account-datamax-form>
+                </template>
+                <template if:false={accDatamax}>
+                    <c-record-form object-api-name='Account' record-type-id={fieldValueContent.RecordTypeId} rt-name={fieldValueContent.RecordTypeName} 
+                    fields-value-step-1={fieldValueContent} onnext={handleNext} is-new=true onpreavious={handlePreavious}></c-record-form>
+                </template>
+            </template>
+        </template>
+        <template if:true={step3}>
+            <c-wizard-step3 account-id={accountId} onnext={handleNext} onpreavious={handlePreavious}>/</c-wizard-step3>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,52 @@
+<template>
+    <lightning-quick-action-panel header="Aggiungi un indirizzo">
+      <template if:true={statusAndPricebook}>
+          <template if:false={isNewAddress}>
+          <lightning-layout multiple-rows="false">
+            <template if:false={recordsLoaded}>
+              <div class="slds-text-heading_small slds-text-align_center">Non ci sono indirizzi legati al cliente selezionato</div>
+            </template>
+            
+            <template if:true={recordsLoaded}>
+              <template for:each={records} for:item="indirizzo">
+                <lightning-layout-item size="4" key={indirizzo.Id} flexibility="auto" padding="horizontal-small">
+                <c-aggiungi-indirizzo-item key={indirizzo.Id} item={indirizzo} onselected={handleSelectedItem}></c-aggiungi-indirizzo-item>
+                </lightning-layout-item>
+              </template>
+            </template>
+            <lightning-layout-item size="4" flexibility="auto" padding="around-large">
+              <div class="slds-align_absolute-center slds-p-top_xx-large">
+                <lightning-button-icon icon-name="action:new"  size="large" onclick={newAddress} alternative-text="Crea nuovo indirizzo"></lightning-button-icon>
+              </div>
+            </lightning-layout-item>
+          </lightning-layout>
+        </template>
+          <template if:true={isNewAddress}>
+            <lightning-layout multiple-rows="false">
+                <lightning-layout-item size="1" flexibility="auto">
+                  <lightning-button-icon icon-name="action:back" variant="border-filled" size="medium" alternative-text="Indietro" onclick={handleCancel}></lightning-button-icon>
+                </lightning-layout-item>
+                <lightning-layout-item size="10" flexibility="auto">
+                  <c-new-address-form account-id={accID} disable-account=true oncancel={handleCancel} onaddresssuccess={handleAddressSuccess} 
+                                      onaddresserror={handleAddressError}  hide-button=true></c-new-address-form>
+                </lightning-layout-item>
+                <lightning-layout-item size="1" flexibility="auto" padding="horizontal-large">
+                  <lightning-button-icon icon-name="utility:save" variant="border-filled" size="medium" alternative-text="Salva" onclick={handleAddressSubmit}></lightning-button-icon>
+                </lightning-layout-item>
+            </lightning-layout>
+          </template>
+          <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" style="position: inherit;"></lightning-spinner>
+          </template>
+        <template if:false={isCalledFromAura}>
+          <div slot="footer">
+            <lightning-button variant="neutral" label="Annulla" onclick={closeAction} ></lightning-button>
+            <lightning-button variant="brand" label="Salva" onclick={handleSave} class="slds-m-left_x-small" disabled={disabledBtn}></lightning-button>
+          </div>
+        </template>
+      </template>
+      <template if:false={statusAndPricebook}>
+        <div class="slds-text-align_center slds-text-heading_small">Non puoi eseguire questa operazione</div>
+    </template>
+    </lightning-quick-action-panel>
+  </template>

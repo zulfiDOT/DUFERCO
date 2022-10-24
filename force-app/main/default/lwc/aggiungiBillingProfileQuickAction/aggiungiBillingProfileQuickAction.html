@@ -1,0 +1,45 @@
+<template>
+    <lightning-quick-action-panel header="Aggiungi Billing Profile">
+    <template if:true={statusAndPricebook}>
+        <template if:false={isNewBilling}>
+        <lightning-layout multiple-rows="false">
+            <lightning-layout-item size="11" flexibility="auto">
+                <lightning-layout multiple-rows="false">
+                    <template if:true={records}>
+                        <template for:each={records} for:item="bp">
+                            <lightning-layout-item size="6" key={bp.Id} flexibility="auto" padding="horizontal-large">
+                                <c-billing-profile-item key={bp.Id} item={bp} onselected={handleSelectedItem} forma-anagrafica={formaAnagrafica}></c-billing-profile-item>
+                            </lightning-layout-item>
+                        </template>
+                    </template>
+                </lightning-layout>
+            </lightning-layout-item>
+            <template if:false={records}>
+                <div class="slds-text-heading_small slds-text-align_center">Non ci sono Biling Profile legati al cliente selezionato</div>
+            </template>
+            <lightning-layout-item size="1" flexibility="auto">
+                <div class="slds-align_absolute-center slds-p-top_xx-large">
+                  <lightning-button-icon icon-name="action:new"  size="large" onclick={newBilling} alternative-text="Crea nuovo Billing Profile"></lightning-button-icon>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        </template>
+        <template if:true={isNewBilling}>
+                <c-new-billing-profile-form onerror={handleError} onsuccessbilling={handleSuccess} account={billingAccount}
+                                            quote-id={recordId} onhideform={handleHideForm} ondisablebutton={handleDisableButton}></c-new-billing-profile-form>
+        </template>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" style="position: inherit;"></lightning-spinner>
+        </template>
+        <template if:false={isCalledFromAura}>
+            <div slot="footer">
+                <lightning-button variant="neutral" label="Annulla" onclick={closeAction} ></lightning-button>
+                <lightning-button variant="brand" label="Salva" onclick={handleSave} class="slds-m-left_x-small" disabled={disabledBtn}></lightning-button>
+            </div>
+        </template>
+    </template>
+        <template if:false={statusAndPricebook}>
+            <div class="slds-text-align_center slds-text-heading_small">Non puoi eseguire questa operazione</div>
+        </template>
+    </lightning-quick-action-panel>
+</template>

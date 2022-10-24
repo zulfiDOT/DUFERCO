@@ -1,0 +1,45 @@
+<template>
+    <div class="slds-box slds-theme_default">
+        <div class="slds-p-around_medium">
+            <template if:true={accountDatamax}>
+                <template if:true={agentCode}>
+                    <lightning-card icon-name="standard:account" title={accountName}>
+                        <!--lightning-icon icon-name="standard:account"></lightning-icon-->
+                        <div class="slds-m-top_x-small">
+                            <template if:true={isBusinessType}>
+                                <!--lightning-input type="text" label="Ragione Sociale" value={accountDatamax.account_name} read-only></lightning-input-->
+                                <lightning-input type="text" label="Partita Iva"
+                                    value={accountDatamax.account_vatnumber} read-only></lightning-input>
+                            </template>
+                            <template if:false={isBusinessType}>
+                                <!--lightning-input type="text" label="Nome" value={accountDatamax.account_name} read-only></lightning-input-->
+                                <lightning-input type="text" label="Codice Fiscale"
+                                    value={accountDatamax.account_fiscalcode} read-only></lightning-input>
+                            </template>
+                        </div>
+                    </lightning-card>
+                </template>
+                <template if:false={agentCode}>
+                    Non sei il titolare dell'anagrafica che stai provando ad inserire, contattare l'amministratore.
+                </template>
+            </template>
+            <template if:false={accountDatamax}>
+                L'anagrafica che stai inserendo è gia presente a sistema, contattare l'amministratore.
+            </template>
+
+            <template if:true={isLoading}>
+                <lightning-spinner size="medium"></lightning-spinner>
+            </template>
+        </div>
+        <footer class="slds-modal__footer">
+            <center>
+                <lightning-button tabindex="-1" class="slds-m-top_small" type="button" label="Indietro"
+                    onclick={handlePreavious}></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <template if:true={agentCode}>
+                    <lightning-button tabindex="-1" class="slds-m-top_small" type="button" label="Salva"
+                    onclick={handleSave}></lightning-button>
+                </template>
+            </center>
+        </footer>
+    </div>
+</template>

@@ -1,0 +1,48 @@
+<template>
+    <a onclick={handleClick} style="display: flex; align-items: baseline;">
+        <input type="radio" checked={item.selected}/>
+        <lightning-card>
+            <div slot="title" style="white-space: normal;">
+                <lightning-icon icon-name="standard:address" size="small"></lightning-icon>
+                &nbsp;{item.Indirizzo_di_fatturazione__c}
+            </div>
+        <lightning-record-view-form object-api-name="BillingProfile__c" record-id={item.Id} density="comfy">
+            <div class="slds-box slds-box_medium">
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1"> 
+                        <lightning-output-field field-name="PaymentMode__c"></lightning-output-field>
+                        <lightning-output-field field-name="IsActive__c"></lightning-output-field>
+                    </div>
+                </div>
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1"> 
+                        <lightning-output-field field-name="SdiCode__c"></lightning-output-field>
+                        <lightning-output-field field-name="PaymentConditions__c"></lightning-output-field>
+
+                    </div>
+                </div>
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1"> 
+                        <lightning-output-field field-name="BillingEmail__c"></lightning-output-field>
+                        <lightning-output-field field-name="PECEmail__c"></lightning-output-field>
+                    </div>
+                </div>
+                <template if:true={isPA}> 
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1">
+                        <!--lightning-input type="text" label="Modalità di Pagamento" value={item.PaymentMethod__r.blng__PaymentType__c} read-only class="slds-form-element slds-form-element_stacked"></lightning-input-->
+                        <lightning-output-field field-name="CIGCode__c"></lightning-output-field>
+                        <lightning-output-field field-name="CUPCode__c"></lightning-output-field>
+                    </div>
+                </div>
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1">
+                        <lightning-output-field field-name="RecipientCode__c"></lightning-output-field>
+                    </div>
+                </div>
+                </template>
+            </div>
+        </lightning-record-view-form>
+        </lightning-card>
+    </a>
+</template>

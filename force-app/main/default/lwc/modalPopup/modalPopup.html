@@ -1,0 +1,47 @@
+<template>
+    <div class="slds-theme_default">
+        <template if:true={openmodel}>
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" size="medium">
+                            </lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modal Box Example</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <template if:true={isRecordType}>
+                            <c-retrieve-record-type
+                            value = {recordType}
+                            onselected = {handleSelected}>   
+                        </c-retrieve-record-type>
+                        </template>
+                        <template if:false={isRecordType}>
+                            <center><h2><b>Welcome to Salesforce Code Crack</b></h2><br/>
+                                <c-account-form 
+                                object-name = "Account"
+                                record-type-child = {recordType}>
+                                </c-account-form>
+                            </center>
+                        </template>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <template if:true={isRecordType}>
+                            <lightning-button label='Cancel' variant="neutral" onclick={closeModal}></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <lightning-button label='Next' variant="brand" onclick={onNext} disabled={nextBtn}></lightning-button>                      
+                        </template>
+                        <template if:false={isRecordType}>
+                            <lightning-button label='Previous' variant="brand" onclick={onPrevious}></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <lightning-button label='Save' variant="neutral" onclick={saveMethod}></lightning-button>
+                        </template>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+        </template>
+    </div>
+</template>

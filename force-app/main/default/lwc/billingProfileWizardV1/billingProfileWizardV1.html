@@ -1,0 +1,54 @@
+<template>
+    <template if:true={statusAndPricebook}>
+    <template if:false={startWizard}>
+        <div class="slds-var-p-around_xx-large">
+            <template if:true={billingRecords}>
+                <div class="slds-text-heading_small slds-p-bottom_medium">Seleziona Billing Profile esistente</div>
+                <lightning-datatable
+                    key-field="Id"
+                    data={billingRecords}
+                    columns={columns}
+                    max-row-selection=1
+                    selected-rows={selectedRow}
+                    onrowselection={handleRowSelection}>
+                </lightning-datatable>
+            </template>
+            <template if:false={billingRecords}>
+                <div class="slds-text-heading_small slds-text-align_center">Non ci sono Biling Profile legati al cliente selezionato</div>
+            </template>
+            <div class="slds-var-p-around_x-large">
+                <lightning-button variant="brand" label="Nuovo Billing Profile" title="Crea un nuovo Billing Profile" 
+                                    onclick={handleNewBillingProfile} icon-name="action:new" class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+    </template>
+    <template if:true={isLoading}>
+        <lightning-spinner size="medium" style="background-color: unset;"></lightning-spinner>
+    </template>
+    <template if:true={startWizard}>
+        <div class="slds-card__body slds-card__body_inner">
+            <c-progress-bar steps={steps} type="path" current-step={current}></c-progress-bar>
+        </div>    
+        <template if:true={step1}>
+            <c-step-payment-method-v1  quote-id={recordId} account={billingAccount} is-new-payment={newPayment} payment={payment} payment-type={payment.blng__PaymentType__c} 
+                                       selected-item={paymentSelected} onnewpayment={handleNewPayment} onsetform={handleSetForm} onselectedpayment={handleSelectedPayment}>
+                                    </c-step-payment-method-v1>
+        </template>
+        <template if:true={step2}>
+            <c-step-shipping-address-v1 quote-id={recordId} account={billingAccount} is-new-address={newAddress} selected-item={addressSelected} address={address} 
+                                        onnewaddress={handleNewAddress} onsetform={handleSetFormAd} onselectedaddress={handleSelectedAddress}>
+                                    </c-step-shipping-address-v1>>
+        </template>
+        <template if:true={step3}>
+            <c-step-billing-profile-v1 quote-id={recordId} account={billingAccount} payment={payment} payment-selected={paymentSelected} 
+                                       address={address} address-selected={addressSelected} onsuccessbilling={handleSuccess} >
+                                    </c-step-billing-profile-v1>
+        </template>
+    </template>
+</template>
+    <template if:false={statusAndPricebook}>
+        <div class="slds-text-align_center slds-text-heading_small slds-var-p-around_xx-large">Non puoi eseguire questa operazione</div>
+    </template>
+    
+
+</template>

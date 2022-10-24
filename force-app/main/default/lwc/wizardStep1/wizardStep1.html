@@ -1,0 +1,42 @@
+<template>
+	<div class="slds-box slds-theme_default">
+		<div class="slds-p-around_medium">
+    
+			<lightning-record-edit-form object-api-name="Account">
+				<div class="slds-grid slds-grid_align-center">
+					<div class="slds-col slds-size_2-of-2">
+						<lightning-input type='text' label='Company' value={fieldValue.Company__c.displayValue} disabled></lightning-input>
+						<lightning-radio-group name="radioGroup"
+						                       label="Record Type"
+						                       options={optionList}
+						                       value={fieldValue.RecordTypeId}
+						                       onchange={handleChange}
+						                       type="radio">
+						</lightning-radio-group>
+						<lightning-input-field field-name="Nation__c" onchange={handleFormInputChange} value={fieldValue.Nation__c} variant="label-stacked"></lightning-input-field>
+						<template if:true={businessItaly}>
+						<lightning-input-field class={inputerror} field-name="VatNumber__c" value={fieldValue.VatNumber__c} onchange={handleFormInputChange} variant="label-stacked"></lightning-input-field>
+					</template>
+					<template if:true={personItaly}>
+					<lightning-input-field class={inputerror} field-name="FiscalCode__c" value={fieldValue.FiscalCode__c} onchange={handleFormInputChange} variant="label-stacked"></lightning-input-field>
+				</template>
+                <div class={validationruleserror}>{validationruleserrormessage}</div>
+				<template if:true={notItaly}>
+				<lightning-input-field field-name="Email__c" value={fieldValue.Email__c} onchange={handleFormInputChange} variant="label-stacked"></lightning-input-field>
+			</template>
+		</div>
+	</div>
+</lightning-record-edit-form>
+<template if:true={isLoading}>
+<div class="exampleHolder">
+	<lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+</div>
+</template>
+</div>
+<footer class="slds-modal__footer">
+	<center>
+		<lightning-button tabindex="-1" class="slds-m-top_small" type="button" label="Avanti" disabled={checkvalidation} onclick={handleNext}></lightning-button>
+	</center>
+</footer>
+</div>
+</template>

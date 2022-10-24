@@ -1,0 +1,38 @@
+<template>
+    <template if:false={isNewAddress}>
+        <div class="slds-var-p-around_xx-large">
+            <template if:true={addressRecords}>
+                <div class="slds-text-heading_small slds-p-bottom_medium">Seleziona un Indirizzo esistente</div>
+                <lightning-datatable
+                    key-field="Id"
+                    data={addressRecords}
+                    columns={columns}
+                    max-row-selection=1
+                    selected-rows={selectedRow}
+                    onrowselection={handleRowSelection}>
+                </lightning-datatable>
+            </template>
+            <template if:false={addressRecords}>
+                <div class="slds-text-heading_small slds-text-align_center">Non ci sono Indirizzi legati al cliente selezionato</div>
+            </template>
+            <div class="slds-var-p-around_x-large">
+                <lightning-button variant="brand" label="Nuovo Indirizzo di Fatturazione" title="Crea un nuovo metodo indirizzo di fatturazione" 
+                                    onclick={handleNewAddressMethod} icon-name="action:new" class="slds-m-left_x-small"></lightning-button>
+            </div>
+        </div>
+        </template>
+        <template if:true={isNewAddress}>
+            <template if:true={isLoading}>
+                <lightning-spinner size="medium" alternative-text="Loading" style="background-color: unset;"></lightning-spinner>
+            </template>
+            <lightning-layout multiple-rows="false">
+                <lightning-layout-item size="1" flexibility="auto" padding="horizontal-medium">
+                    <lightning-button-icon icon-name="action:back" variant="border-filled" size="medium" alternative-text="Indietro" onclick={back}></lightning-button-icon>
+                </lightning-layout-item>
+                <lightning-layout-item size="10" flexibility="auto" class="slds-p-bottom_xx-large">
+                    <c-new-address-form account-id={account.Id} disable-account=true onaddresserror={handleAddressError} onaddresssuccess={handleAddressSuccess} hide-button=true
+                                            type="4" type-read-only=true></c-new-address-form>
+                </lightning-layout-item>
+            </lightning-layout>
+        </template>
+</template>

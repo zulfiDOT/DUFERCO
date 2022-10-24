@@ -1,0 +1,20 @@
+<template >
+    <div class="slds-var-p-around_xxx-small slds-theme_default"> 
+    <lightning-card variant="Narrow"  title="Voci Offerta"  icon-name="custom:custom93">
+        <lightning-layout vertical-align="stretch" multiple-rows="false">
+                <template if:true={quoteLines}>
+                    <template for:each={quoteLines} for:item="qLine">
+                            <lightning-layout-item flexibility="auto" size="12" key={qLine.Id} class="slds-var-p-*_xxx-small">
+                                <lightning-record-view-form object-api-name="SBQQ__QuoteLine__c" record-id={qLine.Id} density="compact">
+                                    <lightning-button variant="base" label={qLine.Name} value={qLine.Id} onclick={viewRecord} class="slds-m-left_xxx-small"></lightning-button>
+                                        <lightning-output-field field-name="SBQQ__Product__c" class="output-field"></lightning-output-field>
+                                        <lightning-output-field field-name="SBQQ__Quantity__c" class="output-field"></lightning-output-field>
+                                        <lightning-output-field field-name="SBQQ__ListPrice__c" class="output-field"></lightning-output-field>
+                                </lightning-record-view-form>
+                                </lightning-layout-item>
+                    </template>
+                </template>
+        </lightning-layout>
+        </lightning-card>
+    </div>
+</template>

@@ -1,0 +1,15 @@
+<template>
+    <div class="slds-form slds-form_stacked slds-m-around_x-small">
+      <c-lookup
+        errors={errors}
+        onsearch={handleSearch}
+        onselectionchange={handleSelectionChange}
+        label="Cerca un indirizzo"
+        placeholder="Inserisci una posizione"
+      >
+      </c-lookup>
+    </div>
+    <template if:true={isLoading}>
+      <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+</template>

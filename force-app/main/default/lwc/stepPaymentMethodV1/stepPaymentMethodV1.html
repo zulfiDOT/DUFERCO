@@ -1,0 +1,132 @@
+<template>
+    <template if:false={isNewPayment}>
+    <div class="slds-var-p-around_xx-large">
+        <template if:true={paymentRecords}>
+            <div class="slds-text-heading_small slds-p-bottom_medium">Seleziona un Metodo di Pagamento esistente</div>
+            <lightning-datatable
+                key-field="Id"
+                data={paymentRecords}
+                columns={columns}
+                max-row-selection=1
+                selected-rows={selectedRow}
+                onrowselection={handleRowSelection}>
+            </lightning-datatable>
+        </template>
+        <template if:false={paymentRecords}>
+            <div class="slds-text-heading_small slds-text-align_center">Non ci sono Metodi di Pagamento legati al cliente selezionato</div>
+        </template>
+        <div class="slds-var-p-around_x-large">
+            <lightning-button variant="brand" label="Nuovo Metodo di Pagamento" title="Crea un nuovo metodo di pagamento" 
+                                onclick={handleNewPaymentMethod} icon-name="action:new" class="slds-m-left_x-small"></lightning-button>
+        </div>
+    </div>
+    </template>
+    <template if:true={isNewPayment}>
+        <template if:true={isLoading}>
+            <lightning-spinner size="medium" alternative-text="Loading" style="background-color: unset;"></lightning-spinner>
+        </template>
+        <lightning-layout multiple-rows="false">
+            <lightning-layout-item size="1" flexibility="auto" padding="horizontal-medium">
+                <lightning-button-icon icon-name="action:back" variant="border-filled" size="medium" alternative-text="Indietro" onclick={back}></lightning-button-icon>
+            </lightning-layout-item>
+            <lightning-layout-item size="10" flexibility="auto" class="slds-p-bottom_xx-large">
+                <!--c-payment-method-item  is-new={isNewPayment} address={customerAddress} account={account} onsuccesspayment={handlePaymentSuccess} onerrorpayment={handlePaymentError}></c-payment-method-item-->
+                <lightning-record-edit-form object-api-name="blng__PaymentMethod__c" density="comfy">
+                    <div class="slds-box slds-box_medium">
+                        <div class="slds-form__row">
+                            <div class="slds-grid slds-size_1-of-1">
+                                <lightning-input-field field-name="blng__Account__c" value={account.Id} class="slds-size_1-of-2" disabled></lightning-input-field>
+                                <lightning-combobox name="paymentType" label="Tipo di Pagamento" class="slds-size_1-of-2" value={paymentType}
+                                                    placeholder="Seleziona un opzione" options={options} onchange={handlePaymentType} required></lightning-combobox>
+                                <lightning-input-field field-name="blng__PaymentType__c" value={paymentType} class="slds-hide"></lightning-input-field>
+                            </div>
+                        </div>
+                        <template if:true={isSdd}>
+                            <div class="slds-form__row">
+                                <div class={isPersonaFisicaClass}>  
+                                    <template if:true={isPersonaFisica}>
+                                        <lightning-input-field field-name="PayableAccountFirstName__c" value={account.firstName} disabled></lightning-input-field>
+                                        <lightning-input-field field-name="PayableAccountLastName__c" value={account.lastName} disabled></lightning-input-field>
+                                    </template>
+                                    <template if:false={isPersonaFisica}>
+                                        <lightning-input-field field-name="PayableAccount__c" value={account.name} disabled></lightning-input-field>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="slds-form__row">
+                                <div class="slds-grid slds-size_1-of-1">
+                                    <lightning-input-field field-name="blng__BillingCountry__c" value={payment.blng__BillingCountry__c} required onchange={handleCountry}></lightning-input-field>
+                                    <lightning-input-field field-name="IBAN__c" value={payment.IBAN__c} required></lightning-input-field>
+                                </div>
+                            </div>
+                            <c-advanced-map-lookup onselectaddress={handleAddressSelection}></c-advanced-map-lookup>
+                            <div class="slds-form__row">
+                                <div class="slds-grid slds-size_1-of-2">
+                                    <lightning-input-field field-name="blng__BillingStreet__c" value={streetName}></lightning-input-field>
+                                </div>
+                            </div>
+                            <div class="slds-form__row">
+                                <div class="slds-grid slds-size_1-of-1">
+                                    <!--div class="slds-grid slds-size_1-of-2"-->
+                                        <lightning-input-field field-name="StreetNumber__c" value={streetNumber}></lightning-input-field>
+                                        <lightning-input-field field-name="blng__BillingCity__c" value={city}></lightning-input-field>                    
+                                    <!--/div-->
+                                </div>
+                            </div>
+                            <div class="slds-form__row">
+                                <div class="slds-grid slds-size_1-of-1">
+                                    <!--div class="slds-grid slds-size_1-of-2"-->
+                                        <lightning-input-field field-name="blng__BillingZipPostal__c" value={zipCode}></lightning-input-field>
+                                        <lightning-input-field field-name="blng__BillingStateProvince__c" value={province}></lightning-input-field>
+                                    <!--/div-->
+                                </div>
+                            </div>
+                            <div class="slds-form__row">
+                                <div class="slds-grid slds-size_1-of-1">
+                                    <lightning-input-field field-name="Sottoscrittore_e_Debitore_coincidono__c" value={payment.Sottoscrittore_e_Debitore_coincidono__c} onchange={handleMatch}></lightning-input-field>
+                                    <template if:false={italy}>                            
+                                        <lightning-input-field field-name="SwiftBicCode__c" value={payment.SwiftBicCode__c} required></lightning-input-field>
+                                    </template>
+                                </div>
+                            </div>
+                            <template if:true={match}>
+                                <div class="slds-form__row">
+                                    <div class="slds-grid slds-size_1-of-1">
+                                        <lightning-input-field field-name="SubscriptionAccountFirstName__c" value={payment.SubscriptionAccountFirstName__c} required></lightning-input-field>
+                                        <lightning-input-field field-name="SubscriptionAccountLastName__c" value={payment.SubscriptionAccountLastName__c} required></lightning-input-field>
+                                    </div>
+                                </div>
+                                <div class="slds-form__row">
+                                    <div class="slds-grid slds-size_1-of-2">
+                                        <lightning-input-field field-name="SubscriptionFiscalCode__c" value={payment.SubscriptionFiscalCode__c} required></lightning-input-field>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <template if:true={isBonifico}>   
+                        </template>
+                        <!--template if:true={isCard}>
+                            <div class="slds-form__row">
+                                <div class="slds-grid slds-size_1-of-1"> 
+                                    <lightning-input-field field-name="NexiContractNumber__c"></lightning-input-field>
+                                    <lightning-input-field field-name="blng__Nameoncard__c"></lightning-input-field>
+                                </div>
+                            </div>
+                            <div class="slds-form__row">
+                                <div class="slds-grid slds-size_1-of-1"> 
+                                    <lightning-input-field field-name="blng__CardType__c"></lightning-input-field>
+                                    <lightning-input-field field-name="CardExpiration__c"></lightning-input-field>
+                                </div>
+                            </div>
+                            <div class="slds-form__row">
+                                <div class="slds-grid slds-size_1-of-2"> 
+                                    <lightning-input-field field-name="HiddenPAN__c"></lightning-input-field>
+                                </div>
+                            </div>
+                        </template-->
+                    </div>
+                </lightning-record-edit-form>
+            </lightning-layout-item>
+        </lightning-layout>
+    </template>
+</template>

@@ -1,0 +1,125 @@
+<template>
+    <lightning-layout>
+    <lightning-layout-item size="1" flexibility="auto">
+        <lightning-button-icon icon-name="action:back" variant="border-filled" size="medium" alternative-text="Indietro" onclick={backForm}></lightning-button-icon>
+    </lightning-layout-item>
+    <lightning-layout-item size="11" flexibility="auto">
+    <lightning-record-edit-form object-api-name="BillingProfile__c" onsuccess={handleSuccess} onerror={handleError}>
+        <lightning-messages></lightning-messages>
+        <div class="slds-box slds-box_medium">
+            <div class="slds-form__row">
+                <div class="slds-grid slds-size_1-of-1"> 
+                    <lightning-input-field field-name="AccountId__c" value={account.Id} disabled required></lightning-input-field>
+                    <lightning-input-field field-name="BillingAddress__c" value={address} class="billingAddress" disabled required></lightning-input-field>
+                </div>
+            </div>
+            <div class="slds-form__row">
+                <div class="slds-grid slds-size_1-of-2"> 
+                    <lightning-input-field field-name="PaymentMethod__c" value={payment} disabled required></lightning-input-field>
+                </div>
+            </div>
+            <div class="slds-form__row">
+                <div class="slds-grid slds-size_1-of-1"> 
+                    <lightning-input-field field-name="PaymentConditions__c"></lightning-input-field>
+                    <lightning-input-field field-name="SdiCode__c" value={account.sdiCode} disabled={isPerson}></lightning-input-field>
+                </div>
+            </div>
+            <div class="slds-form__row">
+                <div class="slds-grid slds-size_1-of-1"> 
+                    <lightning-input-field field-name="PECEmail__c" value={account.pec}></lightning-input-field>
+                    <lightning-input-field field-name="BillingEmail__c" value={account.email}></lightning-input-field>
+                </div>
+            </div>
+            <template if:true={isPA}>
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-1"> 
+                        <lightning-input-field field-name="CIGCode__c"></lightning-input-field>
+                        <lightning-input-field field-name="CUPCode__c"></lightning-input-field>
+                    </div>
+                </div>
+                <div class="slds-form__row">
+                    <div class="slds-grid slds-size_1-of-2"> 
+                        <lightning-input-field field-name="RecipientCode__c"></lightning-input-field>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-record-edit-form>
+    </lightning-layout-item>
+    </lightning-layout>
+        <lightning-tabset>
+            <lightning-tab label={tabPaymentMethod} icon-name="utility:money" onactive={tabChangeHandler}>
+                <lightning-layout multiple-rows="false">
+                    <template if:false={isNewPayment}>
+                        <template if:true={records}>
+                            <template for:each={records} for:item="payment">
+                                <lightning-layout-item size="4" key={payment.Id} flexibility="auto" padding="horizontal-small">
+                                    <c-payment-method-item key={payment.Id} item={payment} onselected={handleSelectedItem} is-new={isNewPayment}></c-payment-method-item>
+                                </lightning-layout-item>
+                            </template>          
+                        </template>
+                        <template if:false={records}>
+                            <lightning-layout-item size="8" flexibility="auto" padding="horizontal-small">
+                                <div class="slds-text-heading_small slds-text-align_center">Non ci sono Metodi di Pagamento legati al cliente selezionato</div>
+                            </lightning-layout-item>
+                        </template>
+                        <lightning-layout-item size="4" flexibility="auto" padding="horizontal-small">
+                            <div class="slds-align_absolute-center slds-p-top_xx-large">
+                                <lightning-button-icon icon-name="action:new" variant="border-filled" size="medium" alternative-text="Nuovo Metodo di Pagamento" onclick={getNewForm}></lightning-button-icon>
+                            </div>
+                        </lightning-layout-item>  
+                    </template>
+                    <template if:true={isNewPayment}>
+                        <lightning-layout-item size="1" flexibility="auto">
+                            <lightning-button-icon icon-name="action:back" variant="border-filled" size="medium" alternative-text="Indietro" onclick={back}></lightning-button-icon>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="10" flexibility="auto" class="slds-p-bottom_xx-large">   
+                            <c-payment-method-item  is-new={isNewPayment} address={customerAddress} account={account} onsuccesspayment={handlePaymentSuccess} onerrorpayment={handlePaymentError}></c-payment-method-item>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="1" flexibility="auto" padding="horizontal-large">
+                            <lightning-button-icon icon-name="utility:save" variant="border-filled" size="medium" alternative-text="Salva" onclick={handleSubmitPayment}></lightning-button-icon>
+                        </lightning-layout-item>
+                    </template>
+                </lightning-layout>
+            </lightning-tab>
+            <lightning-tab label={tabIndirizzo} icon-name="standard:address" onactive={tabChangeHandler}>
+                <lightning-layout multiple-rows="false">
+                <template if:false={isNewAddress}>
+                    <template if:true={recordsAddress}>
+                        <template for:each={recordsAddress} for:item="indirizzo">
+                            <lightning-layout-item size="4" key={indirizzo.Id} flexibility="auto" padding="horizontal-small">
+                                <c-aggiungi-indirizzo-item key={indirizzo.Id} item={indirizzo} onselected={handleSelectedItem}></c-aggiungi-indirizzo-item>
+                            </lightning-layout-item>
+                        </template>
+                        <template if:false={recordsAddressSize}>
+                            <lightning-layout-item size="8" flexibility="auto" padding="horizontal-small">
+                                <div class="slds-text-heading_small slds-text-align_center">Non ci sono Indirizzi di Fatturazione legati al cliente selezionato</div>
+                            </lightning-layout-item>
+                        </template>
+                            <lightning-layout-item size="4" flexibility="auto" padding="horizontal-small">
+                                <div class="slds-align_absolute-center slds-p-top_xx-large">
+                                    <lightning-button-icon icon-name="action:new" variant="border-filled" size="medium" alternative-text="Nuovo Indirizzo di Fatturazione" onclick={getNewForm}></lightning-button-icon>
+                                </div>
+                            </lightning-layout-item>  
+                    </template>
+                </template>
+                <template if:true={isNewAddress}>
+                    <lightning-layout-item size="1" flexibility="auto">
+                        <lightning-button-icon icon-name="action:back" variant="border-filled" size="medium" alternative-text="Indietro" onclick={back}></lightning-button-icon>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="10" flexibility="auto">
+                        <c-new-address-form account-id={account.Id} disable-account=true onaddresserror={handleAddressError} onaddresssuccess={handleAddressSuccess} hide-button=true
+                                            type="4" type-read-only=true></c-new-address-form>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" flexibility="auto" padding="horizontal-large">
+                        <lightning-button-icon icon-name="utility:save" variant="border-filled" size="medium" alternative-text="Salva" onclick={handleAddressSubmit}></lightning-button-icon>
+                    </lightning-layout-item>
+                </template>
+                </lightning-layout>
+            </lightning-tab>
+        </lightning-tabset>
+        <!--div class="slds-var-p-around_medium slds-align_absolute-center">
+          <lightning-button variant="brand" type="button" label="Annulla" onclick={cancel}></lightning-button>
+          <lightning-button variant="brand" type="submit" label="Salva" class="slds-m-left_x-small"></lightning-button>
+        </div-->
+</template>

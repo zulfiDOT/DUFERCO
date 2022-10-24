@@ -1,0 +1,40 @@
+<template>
+    <template if:true={statusAndPricebook}>
+        <template if:false={isNewAddress}>
+            <div class="slds-var-p-around_xx-large">
+                <template if:true={records}>
+                    <div class="slds-text-heading_small slds-p-bottom_medium">Seleziona un indirizzo esistente</div>
+                    <lightning-datatable key-field="Id" data={records} columns={columns} max-row-selection=1
+                        onrowselection={handleRowSelection}>
+                    </lightning-datatable>
+                </template>
+                <template if:false={records}>
+                    <div class="slds-text-heading_small slds-text-align_center">Non ci sono Indirizzi legati al
+                        cliente selezionato</div>
+                </template>
+                <div class="slds-var-p-around_x-large">
+                    <lightning-button variant="brand" label="Nuovo Indirizzo" title="Crea un nuovo indirizzo"
+                        onclick={handleNewAddress} icon-name="action:new" class="slds-m-left_x-small">
+                    </lightning-button>
+                </div>
+            </div>
+        </template>
+        <template if:true={isLoading}>
+            <lightning-spinner size="medium" style="background-color: unset;"></lightning-spinner>
+        </template>
+        <template if:true={isNewAddress}>
+            <lightning-layout multiple-rows="false">
+                <lightning-layout-item size="1" flexibility="auto"></lightning-layout-item>
+                <lightning-layout-item size="10" flexibility="auto">
+                  <c-new-address-form account-id={accID} disable-account=true onaddresssuccess={handleAddressSuccess} 
+                                      onaddresserror={handleAddressError}  hide-button=true></c-new-address-form>
+                </lightning-layout-item>
+                <lightning-layout-item size="1" flexibility="auto" padding="horizontal-large"></lightning-layout-item>
+            </lightning-layout>
+        </template>
+    </template>
+    <template if:false={statusAndPricebook}>
+        <div class="slds-text-align_center slds-text-heading_small slds-var-p-around_xx-large">Non puoi eseguire questa
+            operazione</div>
+    </template>
+</template>

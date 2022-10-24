@@ -1,0 +1,37 @@
+<template>
+    <template if:false={isNewPayment}>
+    <div class="slds-var-p-around_xx-large">
+        <template if:true={paymentRecords}>
+            <div class="slds-text-heading_small slds-p-bottom_medium">Seleziona un Metodo di Pagamento esistente</div>
+            <lightning-datatable
+                key-field="Id"
+                data={paymentRecords}
+                columns={columns}
+                max-row-selection=1
+                selected-rows={selectedRow}
+                onrowselection={handleRowSelection}>
+            </lightning-datatable>
+        </template>
+        <template if:false={paymentRecords}>
+            <div class="slds-text-heading_small slds-text-align_center">Non ci sono Metodi di Pagamento legati al cliente selezionato</div>
+        </template>
+        <div class="slds-var-p-around_x-large">
+            <lightning-button variant="brand" label="Nuovo Metodo di Pagamento" title="Crea un nuovo metodo di pagamento" 
+                                onclick={handleNewPaymentMethod} icon-name="action:new" class="slds-m-left_x-small"></lightning-button>
+        </div>
+    </div>
+    </template>
+    <template if:true={isNewPayment}>
+        <template if:true={isLoading}>
+            <lightning-spinner size="medium" alternative-text="Loading" style="background-color: unset;"></lightning-spinner>
+        </template>
+        <lightning-layout multiple-rows="false">
+            <lightning-layout-item size="1" flexibility="auto" padding="horizontal-medium">
+                <lightning-button-icon icon-name="action:back" variant="border-filled" size="medium" alternative-text="Indietro" onclick={back}></lightning-button-icon>
+            </lightning-layout-item>
+            <lightning-layout-item size="10" flexibility="auto" class="slds-p-bottom_xx-large">
+                <c-payment-method-item  is-new={isNewPayment} address={customerAddress} account={account} onsuccesspayment={handlePaymentSuccess} onerrorpayment={handlePaymentError}></c-payment-method-item>
+            </lightning-layout-item>
+        </lightning-layout>
+    </template>
+</template>

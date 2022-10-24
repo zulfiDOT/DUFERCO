@@ -1,0 +1,36 @@
+<template>
+        <div class="slds-box slds-theme_default">
+            <div class="slds-p-around_medium">
+                <lightning-card>
+                <template if:true={accRecord}>
+                    <lightning-icon icon-name="standard:account"></lightning-icon>
+                    <lightning-button label={accRecord.fields.Name.value} variant="base" onclick={goToAccount} class="slds-m-left_x-small"></lightning-button>
+                    <div class="slds-m-top_x-small">
+                    <lightning-input type="text" label="Company" value={accRecord.fields.Company__c.displayValue} read-only></lightning-input>
+                    <lightning-input type="text" label="Nazione" value={accRecord.fields.Nation__c.value} read-only></lightning-input>
+                            <template if:true={isBusiness}>
+                                <lightning-input type="text" label="Partita Iva" value={accRecord.fields.VatNumber__c.value} read-only></lightning-input>
+                            </template>
+                            <template if:true={isPerson}>
+                                <lightning-input type="text" label="Codice Fiscale" value={accRecord.fields.FiscalCode__c.value} read-only></lightning-input> <!-- accRecord.fields.PersonContact.value.fields.FiscalCode__c.value -->
+                            </template>
+                            <template if:true={isForeign}>
+                                <lightning-input type="email" label="Email" value={accRecord.fields.Email__c.value} read-only></lightning-input>
+                            </template>
+                    </div>
+                </template>
+                <template if:false={accRecord}>
+                    L'anagrafica che stai inserendo è gia presente a sistema, contattare l'amministratore.
+                </template>
+                </lightning-card>
+            </div>
+            <template if:true={accRecord}>
+                <footer class="slds-modal__footer">
+                    <center>
+                        <lightning-button tabindex="-1" class="slds-m-top_small" type="button" label="Indietro" onclick={handlePreavious}></lightning-button>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <!--lightning-button tabindex="-1" class="slds-m-top_small" type="button" label="Avanti"   onclick={handleNext}></lightning-button-->
+                    </center>
+                </footer>
+            </template>
+        </div>
+</template>

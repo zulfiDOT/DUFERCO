@@ -1,0 +1,24 @@
+<template>
+    <a onclick={handleClick} style="display: flex; align-items: baseline;">
+        <input type="radio" checked={item.selected}/>
+        <lightning-card title={item.Type__c} icon-name="standard:address">
+        <!--Via : {item.StreetName__c} <br>
+        Numero Civico : {item.StreetNumber__c} <br>
+        Città : {item.City__c} <br>
+        Paese : {item.Country__c} <br-->
+        <lightning-record-view-form object-api-name="Address__c" record-id={item.Id} density="comfy">
+            <div class="slds-box slds-box_xx-small slds-grid">
+                <div class="slds-col slds-size_1-of-2">
+            <lightning-output-field field-name="StreetName__c"></lightning-output-field>
+            <lightning-output-field field-name="StreetNumber__c"></lightning-output-field>
+            <lightning-output-field field-name="City__c"></lightning-output-field>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+            <lightning-output-field field-name="Country__c"></lightning-output-field>
+            <lightning-output-field field-name="Province__c"></lightning-output-field>
+                </div>
+            </div>
+        </lightning-record-view-form>
+        </lightning-card>
+    </a>
+</template>
