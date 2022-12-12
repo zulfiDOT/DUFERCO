@@ -5,6 +5,7 @@ public class AccountTriggerHandler {
     
     public static void syncWithDatamax(List<Account> triggerNew) {
         if(MulesoftApiController.isActive('UpsertAccount')) {
+            System.debug('HERE AccountTriggerHandler COMES TRUE LINE 9: ');
             MulesoftApiController.lockTriggers = true;
             Set<Id> accountIdsToSend = new Set<Id>();
             Set<Id> accountIdsToSend2 = new Set<Id>();

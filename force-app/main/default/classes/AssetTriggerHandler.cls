@@ -1,5 +1,5 @@
 /*
- * @TestClass : AssetTriggerHandlerTest
+ * @TestClass: AssetTriggerHandlerTest
  * @Trigger : AssetTrigger
 */
 public class AssetTriggerHandler {
@@ -106,6 +106,7 @@ public class AssetTriggerHandler {
             }
         }
 
+        System.debug('HERE AssetTriggerHandler COMES TRUE LINE 110: ');
         MulesoftApiController.lockTriggers = true;
         if(assetToUpdate != null && assetToUpdate.size() > 0) {
             update assetToUpdate;

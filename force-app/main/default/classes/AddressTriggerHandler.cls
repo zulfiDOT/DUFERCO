@@ -31,6 +31,7 @@ public with sharing class AddressTriggerHandler {
 
     public static void syncWithDatamax(List<Address__c> triggerNew) {
         if(MulesoftApiController.isActive('UpsertAccount')) {
+            System.debug('HERE AddressTriggerHandler COMES TRUE LINE 35: ');
             MulesoftApiController.lockTriggers = true;
             Set<Id> accountIdsToSend = new Set<Id>();
             Set<Id> accountIdsToSend2 = new Set<Id>();

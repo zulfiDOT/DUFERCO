@@ -924,7 +924,7 @@ export default class RecordForm extends LightningElement {
         var requiredField = [];
         const fields = {};
         fields.Id = this.recordId;
-  
+        var accountToBeCreated = true;
         for (var field in this.formulario) {
   
           console.log('field es ' + field);
@@ -962,12 +962,16 @@ export default class RecordForm extends LightningElement {
                 if(fieldstep1 == 'Company__c'){
                     fields[fieldstep1] = this.fieldsValueStep1[fieldstep1].value;
                 }
-
-                if(this.fieldsValueStep1[fieldstep1].length>1){
-                    if(fieldstep1 == 'RecordTypeName'){
-                        fields[fieldstep1] = this.recTypeName;
-                    }else{
-                        fields[fieldstep1] = this.fieldsValueStep1[fieldstep1];
+                if(this.fieldsValueStep1[fieldstep1] == null){
+                    this.showToastEvent("Attenzione non è possibile proseguire con il salvataggio dell'account: agente o agenzia mancate sullo user", "warning");
+                    accountToBeCreated = false;
+                }else{
+                    if(this.fieldsValueStep1[fieldstep1].length>1){
+                        if(fieldstep1 == 'RecordTypeName'){
+                            fields[fieldstep1] = this.recTypeName;
+                        }else{
+                            fields[fieldstep1] = this.fieldsValueStep1[fieldstep1];
+                        }
                     }
                 }
             }
@@ -979,8 +983,8 @@ export default class RecordForm extends LightningElement {
             recordInput.fields = fields;
             recordInput.RecordTypeName = this.recTypeName;
             
-
-            console.debug('recordInput:'+JSON.stringify(recordInput));
+            if(accountToBeCreated){
+                console.debug('recordInput:'+JSON.stringify(recordInput));
 
                 createRecord(recordInput)
                 .then(record => {
@@ -1010,7 +1014,11 @@ export default class RecordForm extends LightningElement {
                 //this.showToastEvent('Error creating record', error.body.message, 'error');
                 this.isLoading = false;
                 });
-                this.isLoading = false;
+            }
+            // else{
+            //     this.stayHere();
+            // }
+            this.isLoading = false;
         }else{
             //alert('Compilare i campi obbligatori '+requiredField);
             this.showToastEvent('Compilare i campi obbligatori', requiredField.toString(), 'error' );
@@ -1041,5 +1049,9 @@ export default class RecordForm extends LightningElement {
     }    
     cancelNew(evt){
         this.dispatchEvent(new CustomEvent('preavious'));
+    }
+
+    stayHere(){
+        this.dispatchEvent(new CustomEvent('stayhere'));
     }
 }

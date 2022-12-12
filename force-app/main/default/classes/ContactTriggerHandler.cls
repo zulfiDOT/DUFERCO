@@ -23,6 +23,7 @@ public class ContactTriggerHandler {
             if(accountIdsToSend != null && accountIdsToSend.size() > 0) DmxIntegrationHandler.syncWithDatamax(accountIdsToSend);
             if(accountIdsToSend2 != null && accountIdsToSend2.size() > 0) DmxIntegrationHandler.syncWithDatamax(accountIdsToSend2);
             if(removeSync != null && removeSync.size() > 0) update removeSync;
+            MulesoftApiController.lockTriggers = false;
         }
     }
 

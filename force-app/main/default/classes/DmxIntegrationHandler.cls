@@ -13,6 +13,7 @@ public class DmxIntegrationHandler {
                         FROM Account
                         WHERE Id IN :accountIds]) {
             DmxAccount acc = setDmxAccount(a);
+            system.debug('dmxAccount:'+ acc);                
             if(a.IsPersonAccount) {
                 DmxContact cnt = setDmxContact(a);
                 acc.contacts = new List<DmxContact>{cnt};
@@ -95,6 +96,7 @@ public class DmxIntegrationHandler {
             }
         }
 
+        System.debug('HERE DmxIntegrationHandler COMES TRUE LINE 100: ');
         MulesoftApiController.lockTriggers = true;
 
         if(accountsToUpdate != null && accountsToUpdate.size() > 0) update accountsToUpdate;

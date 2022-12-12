@@ -3,8 +3,10 @@ public with sharing class ResetAssetValueBatchTest {
 
     @testSetup
     public static void setup() {
+        Id recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId();
         Account acc = new Account();
         acc.Name = 'Test Account';
+        acc.RecordTypeId = recordTypeId;
         insert acc;
 
         MulesoftApi__c upsertCard = new MulesoftApi__c();
@@ -27,6 +29,7 @@ public with sharing class ResetAssetValueBatchTest {
         a.Name = 'test';
         a.kWhConsumatiMese__c = 250;
         a.AccountId = acc.Id;
+        a.CardType__c = '1';
         insert a;
 
         SchedulableContext sc = null;
