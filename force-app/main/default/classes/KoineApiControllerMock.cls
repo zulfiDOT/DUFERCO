@@ -1,6 +1,6 @@
 /*
  *   @Class  :   KoineApiController
- *   @TestClass  :   KoineApiControllerTest
+ *   @TestClass: KoineApiControllerTest
 */
 global class KoineApiControllerMock implements HttpCalloutMock{
     global HTTPResponse respond(HTTPRequest req) {

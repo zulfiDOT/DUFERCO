@@ -1,6 +1,6 @@
 /*
- *   @TestClass  :   IdentityServerApiControllerTest
- *   @MockClass  :   IdentityServerApiControllerMock
+ *   @TestClass: IdentityServerApiControllerTest
+ *   @MockClass: IdentityServerApiControllerMock
 */
 
 global class IdentityServerApiController {

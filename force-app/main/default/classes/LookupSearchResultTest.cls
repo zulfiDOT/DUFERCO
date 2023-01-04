@@ -11,6 +11,6 @@ public with sharing class LookupSearchResultTest {
         String testId = res.getId();
         String sobType = res.getSObjectType();
         String subtitle = res.getSubtitle();
-        String title = res.getTitle();
+        String title = res.getTitle(); 
     }
 }

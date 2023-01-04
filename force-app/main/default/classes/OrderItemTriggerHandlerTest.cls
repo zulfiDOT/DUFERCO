@@ -4,10 +4,12 @@
     static void makeData(){
         Account objAccount = new Account(Name = 'Test Acc1', BillingCity = 'Test City', BillingState = 'Test State', 
                                                                     BillingStreet = 'Test Street', BillingPostalCode = '12345', 
-                                                                    BillingCountry = 'Test Country', Phone = '123456');
+                                                                    BillingCountry = 'Test Country', Phone = '123456',
+                                         recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId());
         insert objAccount;
 
-        Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'Qualification');
+        //Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'Qualification');
+        Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'New');
         insert opp;
 
         blng__BillingRule__c billRule = new blng__BillingRule__c();
@@ -39,6 +41,7 @@
         quote.PrevistoInvioPDF__c = false;
         quote.SBQQ__Primary__c = true;
         quote.SBQQ__Status__c = '2';
+        quote.RecordTypeId = Schema.SObjectType.SBQQ__Quote__c.getRecordTypeInfosByDeveloperName().get('EfficienzaEnergetica').getRecordTypeId();
         insert quote;
 
         SBQQ__QuoteLine__c quoteLineItem = new SBQQ__QuoteLine__c();
@@ -47,6 +50,7 @@
         quoteLineItem.SBQQ__RegularPrice__c = 100;
         quoteLineItem.SBQQ__CustomerPrice__c = 50;
         quoteLineItem.SBQQ__Product__c = objProduct.Id;
+        quoteLineItem.ClonedSignificantAsset__c = false;
         insert quoteLineItem;
 
 

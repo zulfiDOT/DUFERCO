@@ -1,6 +1,6 @@
 /*
  *   @Author : Carmine Romano
- *   @TestClass  :   Util_OpenCaseForChangeFieldTest
+ *   @TestClass: Util_OpenCaseForChangeFieldTest
 */
 public with sharing class Util_OpenCaseForChangeField {
     

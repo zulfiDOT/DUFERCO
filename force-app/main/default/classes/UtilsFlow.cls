@@ -1,5 +1,5 @@
 /*
- *   @TestClass  :   UtilsFlowTest
+ *   @TestClass: UtilsFlowTest
 */
 public class UtilsFlow {
 	 @InvocableMethod(label = 'Get Products' description = 'Get Products From Quote Line')

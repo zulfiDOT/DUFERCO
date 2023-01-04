@@ -1,5 +1,5 @@
 /*
- *   @TestClass  :   AccountDatamaxFormControllerTest
+ *   @TestClass: AccountDatamaxFormControllerTest
 */
 public with sharing class AccountDatamaxFormController {
 

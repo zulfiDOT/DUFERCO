@@ -1,6 +1,6 @@
 /*
- *   @Class  :   AddressSearchController
- *   @TestClass  :   AddressSearchControllerTest
+ *   @Class: AddressSearchController
+ *   @TestClass: AddressSearchControllerTest
 */
 global class AddressSearchControllerMock implements HttpCalloutMock {
 

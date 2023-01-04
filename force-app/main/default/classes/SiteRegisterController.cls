@@ -1,5 +1,6 @@
 /**
  * An apex class that creates a portal user
+ * @TestClass: SiteRegisterControllerTest
  */
 public with sharing class SiteRegisterController {
     // PORTAL_ACCOUNT_ID is the account on which the contact will be created on and then enabled as a portal user.

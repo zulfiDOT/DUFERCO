@@ -1,5 +1,5 @@
 /*
- *   @TestClass  :   RecordTypeSelectorTest
+ *   @TestClass: RecordTypeSelectorTest
 */
 public class RecordTypeSelector{
 

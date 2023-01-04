@@ -14,7 +14,8 @@ public class AssetTriggerHandlerTest {
         upsertCard.Name = 'UpsertCard';
         insert upsertCard;
 
-        Account acc = new Account( Name = 'Test Account' );
+        Id recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId();
+        Account acc = new Account( Name = 'Test Account', RecordTypeId = recordTypeId );
         insert acc;
     }
     

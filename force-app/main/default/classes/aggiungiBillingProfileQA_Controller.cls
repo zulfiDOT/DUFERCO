@@ -1,5 +1,5 @@
 /*
- *   @TestClass  :   aggiungiBillingProfileQA_ControllerTest
+ *   @TestClass: aggiungiBillingProfileQA_ControllerTest
 */
 public with sharing class aggiungiBillingProfileQA_Controller {
     
@@ -33,6 +33,14 @@ public with sharing class aggiungiBillingProfileQA_Controller {
         
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<SBQQ__Quote__c> getRecordTypeQuote (String quoteId) {
+        
+        return [Select id, RecordType.DeveloperName from SBQQ__Quote__c where id =: quoteId LIMIT 1];
+        
+    }
+
+
 
     @AuraEnabled
     public static string addBillingProfile(Map<String, Object> billingParams, String quoteId){
@@ -42,6 +50,8 @@ public with sharing class aggiungiBillingProfileQA_Controller {
             blng__PaymentMethod__c payment = (blng__PaymentMethod__c) JSON.deserialize(JSON.serialize(billingParams.get('payment')), blng__PaymentMethod__c.class);
             BillingProfile__c billing = (BillingProfile__c) JSON.deserialize(JSON.serialize(billingParams.get('billing')), BillingProfile__c.class);
             SBQQ__Quote__c quote = new SBQQ__Quote__c();
+
+            SBQQ__Quote__c getBPCompany = [Select Company__c, RecordType.Name from SBQQ__Quote__c where id =: quoteId WITH SECURITY_ENFORCED Limit 1];
 
             if (address.Id != null) {
                 if (address.Type__c != 'Indirizzo Fatturazione') {
@@ -60,13 +70,14 @@ public with sharing class aggiungiBillingProfileQA_Controller {
             }else {
                 billing.PaymentMethod__c = insertSobject(payment);
             }
+            billing.Company__c = getBPCompany.Company__c;
 
             quote.Billing_Profile__c = insertSobject(billing);
             quote.Id = quoteId;
 
             update quote;
 
-            result = 'OK';
+            result = getBPCompany.RecordType.Name;
 
         return result;
     }
@@ -90,4 +101,13 @@ public with sharing class aggiungiBillingProfileQA_Controller {
          
     }
 
+    @AuraEnabled(cacheable=true)
+    public static String getRecorTypeName(String quoteId) {
+        String returnString;
+        List<SBQQ__Quote__c> billingList = [Select id, Name, RecordTypeId, RecordType.Name From SBQQ__Quote__c Where Id =: quoteId Limit 1];
+        if(!billingList.isEmpty() && !String.isBlank(billingList[0].RecordTypeId)){
+            returnString = billingList[0].RecordType.Name;
+        }
+        return returnString;
+    }
 }

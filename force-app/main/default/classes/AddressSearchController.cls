@@ -1,5 +1,5 @@
 /*
- *   @TestClass  :   AddressSearchControllerTest
+ *   @TestClass: AddressSearchControllerTest
  *   @MockClass  :   AddressSearchControllerMock
 */
 public with sharing class AddressSearchController {

@@ -1,5 +1,5 @@
 /*
- *   @TestClass  :   CreditNoteTriggerHandlerTest
+ *   @TestClass: CreditNoteTriggerHandlerTest
 */
 public with sharing class CreditNoteTriggerHandler {
     

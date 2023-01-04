@@ -36,6 +36,6 @@ public with sharing class ResetAssetValueBatchTest {
         ResetAssetValueBatchScheduleClass ravc = new ResetAssetValueBatchScheduleClass();
         ravc.execute(sc);
         Test.stopTest();
-        
+        ResetAssetValueBatch.syncWithMobilitySync(new Set<Id>{a.id});
     }
 }

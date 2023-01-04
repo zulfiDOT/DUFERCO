@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: ProductRecommendationPluginClassTest
+*/
 global class ProductRecommendationPluginClass implements SBQQ.ProductRecommendationPlugin{
 global PricebookEntry[] recommend(SObject quote, List<SObject> quoteLines) {
     System.debug('ProductRecommendationPluginClass');

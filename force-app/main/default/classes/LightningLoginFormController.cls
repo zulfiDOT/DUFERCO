@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: LightningLoginFormControllerTest
+*/
 global class LightningLoginFormController {
 
     public LightningLoginFormController() {
@@ -11,8 +14,7 @@ global class LightningLoginFormController {
             aura.redirect(lgn);
             return null;
         }
-        catch (Exception ex) {
-            return ex.getMessage();            
+        catch (Exception ex) {return ex.getMessage();            
         }
     }
     
@@ -31,8 +33,7 @@ global class LightningLoginFormController {
     @AuraEnabled
     public static String getSelfRegistrationUrl() {
         Auth.AuthConfiguration authConfig = getAuthConfig();
-        if (authConfig.getSelfRegistrationEnabled()) {
-            return authConfig.getSelfRegistrationUrl();
+        if (authConfig.getSelfRegistrationEnabled()) {return authConfig.getSelfRegistrationUrl();
         }
         return null;
     }

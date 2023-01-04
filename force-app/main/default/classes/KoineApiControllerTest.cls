@@ -25,4 +25,12 @@ public class KoineApiControllerTest {
         Test.stopTest();
     }
 
+    @isTest static void noDoc() {
+        // Set mock callout class 
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, new KoineApiControllerMock());
+        List<KoineApiController.Response> response = KoineApiController.retrieveDocFile(null);
+        Test.stopTest();
+    }
+
 }

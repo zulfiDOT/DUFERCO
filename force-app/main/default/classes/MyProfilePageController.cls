@@ -1,6 +1,7 @@
 /**
  * An apex class that updates portal user details.
-   Guest users are never able to access this page.
+ * Guest users are never able to access this page.
+ * @TestClass: MyProfilePageControllerTest
  */
 public with sharing class MyProfilePageController {
 

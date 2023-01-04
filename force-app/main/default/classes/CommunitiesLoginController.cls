@@ -1,5 +1,6 @@
 /**
  * An apex page controller that exposes the site login functionality
+ * @TestClass: CommunitiesLoginControllerTest
  */
 global with sharing class CommunitiesLoginController {
 

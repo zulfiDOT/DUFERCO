@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: WizardSetupUtility_Test
+*/
 public without sharing class WizardSetupUtility {
     
     @AuraEnabled

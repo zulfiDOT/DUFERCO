@@ -1,19 +1,19 @@
 /*
- *   @TestClass  :   DmxIntegrationHandlerTest
+ *   @TestClass: DmxIntegrationHandlerTest
 */
+
 public class DmxIntegrationHandler {
     
     @future(callout=true)
     public static void syncWithDatamax(Set<Id> accountIds) {
         Map<Id,DmxAccount> dmxAccountPerAccountId = new Map<Id,DmxAccount>();
         Map<Id,Account> accountPerAccountId = new Map<Id,Account>();
-        for(Account a : [SELECT IsPersonAccount, Agent__r.AgentCode__c, Company__c, Email__c, Fax, Phone2__c, Phone, PrivacyCommerciale__c, PrivacyCommercialeTerzi__c,
+        for(Account a : [SELECT IsPersonAccount, Agent__r.AgentCode__c, /*Company__c,*/ Email__c, Fax, Phone2__c, Phone, PrivacyCommerciale__c, PrivacyCommercialeTerzi__c,
                             PrivacyProfilazioneConsumo__c, FaxPrefix__c, MobilePrefix__c, PhonePrefix__c, PEC__c, Nation__c, FiscalCode__c, Name, VatNumber__c,
                             FirstName, LastName, DatamaxCustomerCode__c, FormaAnagrafica__c
                         FROM Account
                         WHERE Id IN :accountIds]) {
             DmxAccount acc = setDmxAccount(a);
-            system.debug('dmxAccount:'+ acc);                
             if(a.IsPersonAccount) {
                 DmxContact cnt = setDmxContact(a);
                 acc.contacts = new List<DmxContact>{cnt};
@@ -96,7 +96,6 @@ public class DmxIntegrationHandler {
             }
         }
 
-        System.debug('HERE DmxIntegrationHandler COMES TRUE LINE 100: ');
         MulesoftApiController.lockTriggers = true;
 
         if(accountsToUpdate != null && accountsToUpdate.size() > 0) update accountsToUpdate;
@@ -107,7 +106,7 @@ public class DmxIntegrationHandler {
     public static DmxAccount setDmxAccount(Account a) {
         DmxAccount acc = new DmxAccount();
         acc.account_agent                   = a.Agent__r.AgentCode__c;
-        acc.account_company                 = a.Company__c;
+        acc.account_company                 = '1'; //a.Company__c;
         acc.account_email                   = a.Email__c;
         acc.account_fax                     = a.Fax;
         acc.account_faxprefix               = a.FaxPrefix__c;
@@ -125,7 +124,15 @@ public class DmxIntegrationHandler {
         acc.account_privacycontratto        = true;
         acc.account_privacyprofilazione     = a.PrivacyProfilazioneConsumo__c;
         acc.account_recordtype              = a.IsPersonAccount?'1':'2';
-        acc.account_vatnumber               = a.IsPersonAccount==false&&a.Nation__c=='IT'?a.VatNumber__c:null;
+        if(a.FormaAnagrafica__c != null && (a.FormaAnagrafica__c.equals('CONDOMINIO') || a.FormaAnagrafica__c.equals('CONDOMINIA'))){
+            acc.account_vatnumber           = a.FiscalCode__c;
+        }
+        else if(a.IsPersonAccount==false && a.Nation__c=='IT'){
+            acc.account_vatnumber           = a.VatNumber__c;
+        }
+        else{
+            acc.account_vatnumber           = null;
+        }    
         return acc;
     }
 

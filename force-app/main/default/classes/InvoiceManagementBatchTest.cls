@@ -6,7 +6,7 @@ public class InvoiceManagementBatchTest {
         Account objAccount = new Account(Name = 'Test Acc1', BillingCity = 'Test City', BillingState = 'Test State', 
                                          BillingStreet = 'Test Street', BillingPostalCode = '12345', 
                                          BillingCountry = 'Test Country', Phone = '123456',
-                                         Nation__c ='IT');
+                                         Nation__c ='IT', recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId());
         insert objAccount;
 
         Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'New');
@@ -47,6 +47,10 @@ public class InvoiceManagementBatchTest {
         Product2 objProduct = new Product2(Name = 'Test product1', family = 'Cafe', blng__BillingRule__c = billRule.Id, blng__TaxRule__c = tax.Id,
                                             blng__RevenueRecognitionRule__c = revenue.Id, NeedWorkOrder__c = true, Work_Order_Type__c = 'Spedizione');
         insert objProduct;
+
+        Product2 objProduct1 = new Product2(Name = 'Arrotondamento',productcode='ARR', family = 'Cafe', blng__BillingRule__c = billRule.Id, blng__TaxRule__c = tax.Id,
+                                            blng__RevenueRecognitionRule__c = revenue.Id, NeedWorkOrder__c = true, Work_Order_Type__c = 'Spedizione');
+        insert objProduct1;
 
         PriceBookEntry objPBE = new PriceBookEntry(UnitPrice = 300, PriceBook2Id = Test.getStandardPricebookId(),
                                                         Product2Id = objProduct.Id, IsActive = true);                                                            
@@ -118,7 +122,7 @@ public class InvoiceManagementBatchTest {
         blng__Invoice__c inv = new blng__Invoice__c(blng__Account__c=objAccount.Id, blng__Order__c = ord.Id, BillingProfile__c = billing.Id, blng__InvoiceDate__c = System.today());
         insert inv;
 
-        blng__InvoiceLine__c invline = new blng__InvoiceLine__c(blng__Invoice__c = inv.Id);
+        blng__InvoiceLine__c invline = new blng__InvoiceLine__c(blng__Subtotal__c = 1,blng__TaxPercentageApplied__c = 22,blng__Invoice__c = inv.Id);
         insert invline;
         
         blng__Payment__c payment1 = new blng__Payment__c(Quote__c = quote.Id, blng__Account__c=objAccount.Id, blng__Amount__c=100);
@@ -127,14 +131,49 @@ public class InvoiceManagementBatchTest {
         blng__Invoice__c inv1 = new blng__Invoice__c(blng__Account__c=objAccount.Id, BillingProfile__c = billing2.Id, blng__InvoiceDate__c = System.today());
         insert inv1;
 
-        blng__InvoiceLine__c invline1 = new blng__InvoiceLine__c(blng__Invoice__c = inv1.Id);
+        blng__InvoiceLine__c invline1 = new blng__InvoiceLine__c(blng__Subtotal__c = 1,blng__TaxPercentageApplied__c = 22,blng__Invoice__c = inv1.Id);
         insert invline1;
 
         blng__Invoice__c inv2 = new blng__Invoice__c(blng__Account__c=objAccount.Id, blng__InvoiceDate__c = System.today());
         insert inv2;
 
-        blng__InvoiceLine__c invline2 = new blng__InvoiceLine__c(blng__Invoice__c = inv2.Id);
+        blng__InvoiceLine__c invline2 = new blng__InvoiceLine__c(blng__Subtotal__c = 1,blng__TaxPercentageApplied__c = 22,blng__Invoice__c = inv2.Id);
         insert invline2;
+
+        blng__UsageSummary__c usSum = new blng__UsageSummary__c(
+            blng__Account__c = objAccount.Id,
+            blng__Order__c = ord.Id,
+            blng__Invoice__c = inv.id,
+            blng__OrderProduct__c = ordItem.Id,
+            blng__SummaryStartDate__c = System.today()-2,
+            blng__SummaryEndDate__c = System.today()-2,
+            blng__UnbilledQuantity__c = 0,
+            blng__Subtotal__c = 0,
+            blng__NextBillingDate__c = System.today()-1,
+            blng__InvoiceRunProcessingStatus__c = 'Pending Billing',
+            blng__MatchingId__c=ord.Id+'-'+ordItem.Id+'-'+System.today().year()+'-'+System.today().month(),
+            blng__MatchingAttribute__c = 'Kwh',
+            blng__UnitOfMeasure__c = 'kWh',
+            blng__Source__c = 'External');
+        insert usSum;
+
+        blng__Usage__c us = new blng__Usage__c(
+            blng__UsageSummary__c =usSum.id,
+            blng__Status__c = 'Processed',
+            blng__Account__c = objAccount.Id,
+            blng__ProcessingDate__c = System.today()-2,
+            //blng__Quantity__c = 400,
+            blng__PreratedQuantity__c = 10,
+            blng__PreratedAmount__c = 50,
+            Vehicle_Efficiency__c = 200,
+            Emission_Avg__c = 78,
+            blng__MatchingAttribute__c = 'Kwh',
+            blng__UnitOfMeasure__c = 'kWh',
+            blng__MatchingId__c=ord.Id+'-'+ordItem.Id+'-'+System.today().year()+'-'+System.today().month(),
+            blng__StartDateTime__c = Datetime.now(),
+            blng__EndDateTime__c = Datetime.now()
+            );
+        insert us;
 
         blng__InvoiceScheduler__c is = new blng__InvoiceScheduler__c(
             blng__InvoiceDate__c = System.today(),

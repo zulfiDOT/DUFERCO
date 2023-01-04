@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: CreateUsageSummaryForDailyInvoicingTest
+*/
 public class UsageSummaryWillNotInvoiceBatch implements Database.Batchable<sObject> {
 
     public Database.QueryLocator start(Database.BatchableContext BC) {

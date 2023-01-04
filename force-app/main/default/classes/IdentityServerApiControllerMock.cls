@@ -1,6 +1,6 @@
 /*
- *   @Class  :   IdentityServerApiController
- *   @TestClass  :   IdentityServerApiControllerMockTest
+ *   @Class: IdentityServerApiController
+ *   @TestClass: IdentityServerApiControllerMockTest
 */
 global class IdentityServerApiControllerMock implements HttpCalloutMock{
     global HTTPResponse respond(HTTPRequest req) {

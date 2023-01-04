@@ -8,6 +8,7 @@ public with sharing class aggiungiIndirizzoQuickAction_Test {
 
         Account acc = new Account();
         acc.Name = 'Test Account';
+        acc.recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId();
         insert acc;
 
         SBQQ__Quote__c quote = new SBQQ__Quote__c();

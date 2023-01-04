@@ -1,3 +1,6 @@
+/**
+ * @TestClass: CreditNoteLineTriggerHandlerTest
+ */
 trigger CreditNoteTrigger on blng__CreditNote__c (before insert, before update,after insert, after update) {
     
 

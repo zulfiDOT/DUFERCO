@@ -5,6 +5,8 @@
 public class AssetTriggerHandler {
     
     public static void syncWithMobilityInsert(List<Asset> triggerNew) {
+        MulesoftApiController.lockTriggers = false;
+        System.debug('Upsert Card 2022: '+ MulesoftApiController.isActive('UpsertCard'));
         if(MulesoftApiController.isActive('UpsertCard')) {
             Set<Id> assetIdsToSend = new Set<Id>();
             for(Asset a : triggerNew) {
@@ -16,7 +18,7 @@ public class AssetTriggerHandler {
 
     public static void syncWithMobilityUpdate(List<Asset> triggerNew, Map<Id,Asset> triggerOldMap) {
         if(MulesoftApiController.isActive('UpsertCard')) {
-            Set<Id> assetIdsToSend = new Set<Id>();
+            Set<Id> assetIdsToSend = new Set<Id>(); 
             Set<Id> assetIdsToSend2 = new Set<Id>();
             List<String> fieldsToCheck = new List<String>{'CardNumber__c','ResidualCredit__c','Status','InstallDate','UsageEndDate','BrandModel__c',
                                                             'LicencePlate__c','LifecycleEndDate','RemoteEnabled__c','AccountId','ContactId'};
@@ -88,7 +90,7 @@ public class AssetTriggerHandler {
                 request.card = setVirTessere(a, c);
 
                 List<UpsertCardApiController.Response> response = UpsertCardApiController.makeCallout(new List<UpsertCardApiController.Request>{request});
-
+                 System.debug('response: '+response);
                 a.LastSyncDatetime__c = System.now();
                 if(response != null && response.size() > 0) {
                     if(response.get(0).ResponseCode == '200' || response.get(0).ResponseCode == '201') {
@@ -106,7 +108,6 @@ public class AssetTriggerHandler {
             }
         }
 
-        System.debug('HERE AssetTriggerHandler COMES TRUE LINE 110: ');
         MulesoftApiController.lockTriggers = true;
         if(assetToUpdate != null && assetToUpdate.size() > 0) {
             update assetToUpdate;

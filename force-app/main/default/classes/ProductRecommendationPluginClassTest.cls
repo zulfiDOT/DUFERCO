@@ -6,7 +6,8 @@ public with sharing class ProductRecommendationPluginClassTest {
         
         Account objAccount = new Account(Name = 'Test Acc1', BillingCity = 'Test City', BillingState = 'Test State', 
                                                                     BillingStreet = 'Test Street', BillingPostalCode = '12345', 
-                                                                    BillingCountry = 'Test Country', Phone = '123456');
+                                                                    BillingCountry = 'Test Country', Phone = '123456',
+                                         recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId());
         insert objAccount;
 
         Product2 objProduct = new Product2(Name = 'Test product1', family = 'Cafe');

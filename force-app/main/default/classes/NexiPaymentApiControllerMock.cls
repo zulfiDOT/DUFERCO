@@ -1,6 +1,6 @@
 /*
  *   @Class  :   NexiPaymentApiController
- *   @TestClass  :   NexiPaymentApiControllerTest
+ *   @TestClass: NexiPaymentApiControllerTest
 */
 
 global class NexiPaymentApiControllerMock implements HttpCalloutMock{

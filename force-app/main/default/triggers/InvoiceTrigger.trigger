@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: InvoiceLineTriggerTest
+*/
 trigger InvoiceTrigger on blng__Invoice__c (before insert, before update,after insert, after update) {
 
     if(Trigger.isAfter){
@@ -9,8 +12,8 @@ trigger InvoiceTrigger on blng__Invoice__c (before insert, before update,after i
         if(Trigger.isUpdate){
             InvoiceTriggerHandler.setInvoiceOnPayment(Trigger.new);
             //InvoiceTriggerHandler.setCustomAutonumber(Trigger.new);
-            /*if(InvoiceAfterPostingLogicsBatch.isRunTrigger)
-                InvoiceTriggerHandler.setCustomAutonumberForStatusPosted(Trigger.new,Trigger.OldMap);*/
+            if(InvoiceAfterPostingLogicsBatch.isRunTrigger)
+                InvoiceTriggerHandler.setCustomAutonumberForStatusPosted(Trigger.new,Trigger.OldMap);
         }
     }else{
         if (Trigger.isInsert) {

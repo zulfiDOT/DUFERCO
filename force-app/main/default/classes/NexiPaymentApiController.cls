@@ -1,6 +1,6 @@
 /*
- *   @TestClass  :   NexiPaymentApiControllerTest
- *   @MockClass  :   NexiPaymentApiControllerMock
+ *   @TestClass: NexiPaymentApiControllerTest
+ *   @MockClass: NexiPaymentApiControllerMock
 */
 
 global class NexiPaymentApiController {

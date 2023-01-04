@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: AddressSearchControllerTest
+*/
 public class PlaceFinder {
 
 	public class Matched_substrings {

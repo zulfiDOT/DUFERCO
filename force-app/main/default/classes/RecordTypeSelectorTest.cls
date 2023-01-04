@@ -7,8 +7,10 @@ public with sharing class RecordTypeSelectorTest {
     @TestSetup
     static void makeData(){
 
+        Id recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId();
         Account acc = new Account();
         acc.Name = 'Test Account';
+        acc.RecordTypeId = recordTypeId;
         insert acc;
     }
 

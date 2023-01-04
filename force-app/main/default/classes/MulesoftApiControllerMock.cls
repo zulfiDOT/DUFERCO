@@ -1,6 +1,6 @@
 /*
- *   @Class  :   MulesoftApiController
- *   @TestClass  :   MulesoftApiControllerTest
+ *   @Class: MulesoftApiController
+ *   @TestClass: MulesoftApiControllerTest
 */
 global class MulesoftApiControllerMock implements HttpCalloutMock{
     global HTTPResponse respond(HTTPRequest req) {

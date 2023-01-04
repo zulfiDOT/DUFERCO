@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: ContractServiceTests
+*/
 trigger QuoteLineTrigger on SBQQ__QuoteLine__c (before insert, before update,after insert, after update, after delete) {
 
     if(Trigger.isAfter){

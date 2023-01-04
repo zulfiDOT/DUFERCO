@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: OrderItemTriggerHandlerTest
+*/
 trigger WorkOrderTrigger on WorkOrder (before update) {
 
     if(Trigger.isBefore) {

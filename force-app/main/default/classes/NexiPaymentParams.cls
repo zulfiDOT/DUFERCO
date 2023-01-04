@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: NexiPaymentApiControllerTest
+*/
 global class NexiPaymentParams {
     @AuraEnabled
     public String nexiTransactionCode;

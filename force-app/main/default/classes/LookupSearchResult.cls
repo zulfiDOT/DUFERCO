@@ -3,7 +3,7 @@
  * The Lookup controller returns a List<LookupSearchResult> when sending search result back to Lightning
  */
 /*
- *   @TestClass  :   public with sharing class LookupSearchResult
+ *   @TestClass: LookupSearchResult
 */
 public class LookupSearchResult {
   private String id;
@@ -23,7 +23,7 @@ public class LookupSearchResult {
     this.sObjectType = sObjectType;
     this.icon = icon;
     this.title = title;
-    this.subtitle = subtitle;
+    this.subtitle = subtitle; 
   }
 
   @AuraEnabled

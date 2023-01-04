@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: LightningForgotPasswordControllerTest
+*/
 global class LightningForgotPasswordController {
 
     public LightningForgotPasswordController() {

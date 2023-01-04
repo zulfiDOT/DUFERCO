@@ -1,5 +1,5 @@
 /*
- *   @TestClass  :   QuoteLineTriggerHandlerTest
+ *   @TestClass: QuoteLineTriggerHandlerTest
  * 
 */
 public without sharing class QuoteLineTriggerHandler {

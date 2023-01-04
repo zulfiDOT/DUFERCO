@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: CreateUsageSummaryForDailyInvoicingTest
+*/
 global class UsageSummaryWillNotInvoiceSchedule implements Schedulable {
 
     global void execute(SchedulableContext ctx) {

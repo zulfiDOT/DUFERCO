@@ -1,3 +1,6 @@
+/**
+ * @TestClass: CreateUsageSummaryForDailyInvoicingTest
+ */
 public class CreateUsageSummaryForDailyInvoicingBatch implements Database.Batchable<sObject>{
     
 

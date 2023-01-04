@@ -17,5 +17,26 @@ private class InvoiceLineTriggerTest {
 
         blng__InvoiceLine__c invline = new blng__InvoiceLine__c( blng__Invoice__c = inv.Id );
         insert invline;
+
+        blng__InvoiceScheduler__c is = new blng__InvoiceScheduler__c(
+            blng__InvoiceDate__c = System.today(),
+            blng__StartDateTime__c = System.now().addMinutes(10),
+            blng__TargetDate__c = System.today(),
+            blng__Type__c = 'Once',
+            Name = 'Scheduler test'
+        );
+        insert is;
+
+        blng__InvoiceRun__c ir = new blng__InvoiceRun__c(
+            blng__InvoiceDate__c = is.blng__InvoiceDate__c,
+            blng__InvoiceScheduler__c = is.Id,
+            blng__StartTime__c = is.blng__StartDateTime__c,
+            blng__TargetDate__c = is.blng__TargetDate__c,
+            Name = is.Name
+        );
+        insert ir;
+
+        ir.Name = 'Test';
+        update ir;
     }
 }

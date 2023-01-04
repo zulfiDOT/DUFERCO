@@ -1,6 +1,6 @@
 /*
- *   @TestClass  :   UpsertCardApiControllerTest
- *   @MockClass  :   UpsertCardApiControllerMock
+ *   @TestClass: UpsertCardApiControllerTest
+ *   @MockClass: UpsertCardApiControllerMock
 */
 global class UpsertCardApiController {
 

@@ -1,6 +1,6 @@
 /*
- *   @Class  :   UpsertCardApiController
- *   @TestClass  :   UpsertCardApiControllerTest
+ *   @Class: UpsertCardApiController
+ *   @TestClass: UpsertCardApiControllerTest
 */
 global class UpsertCardApiControllerMock implements HttpCalloutMock{
     global HTTPResponse respond(HTTPRequest req) {

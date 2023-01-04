@@ -1,6 +1,6 @@
 /*
- *   @TestClass  :   KoineApiControllerTest
- *   @MockClass  :   KoineApiControllerMock
+ *   @TestClass: KoineApiControllerTest
+ *   @MockClass: KoineApiControllerMock
 */
 global class KoineApiController {
     
@@ -25,7 +25,7 @@ global class KoineApiController {
 		req.setHeader('Content-Type','application/json;charset=UTF-8');
         //System.debug('HEADER --> '+JSON.serialize(requests[0],true));
         //req.setHeader('docNumber', requests[0].docNumber);
-        url = url + '?docNumber=' + requests[0].docNumber;
+        url = url + '?docNumber=' + requests[0].docNumber+'&invoiceSezionale=' + requests[0].invoiceSezionale;
         req.setEndpoint(url);
         req.setMethod('GET');
        // reqBody.docNumber = requests[0].docNumber;
@@ -45,6 +45,8 @@ global class KoineApiController {
     global class Request {
         @InvocableVariable
         global String docNumber;
+        @InvocableVariable
+        global String invoiceSezionale;
     }
     global class Response {
         @InvocableVariable

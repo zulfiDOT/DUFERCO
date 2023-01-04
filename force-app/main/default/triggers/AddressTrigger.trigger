@@ -1,5 +1,6 @@
-/*
- * @HanlderClass : AddressTriggerHanlder
+/**
+ * @HanlderClass: AddressTriggerHanlder
+ * @TestClass: AddressTriggerHandlerTest
 */
 trigger AddressTrigger on Address__c (before insert, before update, after insert, after update, before delete) {
 
@@ -15,6 +16,11 @@ trigger AddressTrigger on Address__c (before insert, before update, after insert
         if(Trigger.isInsert || Trigger.isUpdate) {
             AddressTriggerHandler.syncWithDatamax(Trigger.new);
         }
+        //EDB 2022-08-04 @TEN -start
+        if (Trigger.isUpdate) {
+            AddressTriggerHandler.invokeUpdateCustomerAddress(trigger.new,Trigger.oldMap);
+        }
+        //EDB 2022-08-04 @TEN -end
     }
 
 }

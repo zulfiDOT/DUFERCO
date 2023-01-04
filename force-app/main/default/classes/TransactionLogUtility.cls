@@ -1,5 +1,5 @@
 /*
- *   @Class  :   TransactionLogUtilityTest
+ *   @TestClass: TransactionLogUtilityTest
 */
 public with sharing class TransactionLogUtility {
 

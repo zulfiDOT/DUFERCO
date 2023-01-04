@@ -4,10 +4,11 @@ public with sharing class CreateUsageSummaryForDailyInvoicingTest {
     public static void setup() {
         Account objAccount = new Account(Name = 'Test Acc1', BillingCity = 'Test City', BillingState = 'Test State', 
                                                                     BillingStreet = 'Test Street', BillingPostalCode = '12345', 
-                                                                    BillingCountry = 'Test Country', Phone = '123456');
+                                                                    BillingCountry = 'Test Country', Phone = '123456',recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId());
         insert objAccount;
 
-        Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'Qualification');
+        //Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'Qualification');
+        Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'New');
         insert opp;
 
         blng__PaymentMethod__c paymentMethod = new blng__PaymentMethod__c();
@@ -83,20 +84,29 @@ public with sharing class CreateUsageSummaryForDailyInvoicingTest {
         ordItem.ServiceDate = Date.today() - 1;
         ordItem.EndDate = Date.today();
         insert ordItem;
+        
+        ConsumptionSchedule ConSch = new ConsumptionSchedule(Name = 'Test', 
+                                                             RatingMethod ='Tier',
+                                                             Type = 'Slab',
+                                                             SBQQ__Category__c = 'Rates', 
+                                                             BillingTerm = 1, 
+                                                             BillingTermUnit= 'Month', 
+                                                             UnitOfMeasure = 'Kwh',  
+                                                             MatchingAttribute = 'Kwh');
+        Insert ConSch;
 
-        SBQQ__OrderItemConsumptionSchedule__c oItemSchedule = new SBQQ__OrderItemConsumptionSchedule__c();
-        oItemSchedule.SBQQ__BillingTermUnit__c = 'Month';
-        oItemSchedule.SBQQ__BillingTerm__c = 1;
-        oItemSchedule.SBQQ__Category__c = 'Rates';
-        oItemSchedule.SBQQ__RatingMethod__c = 'Tier';
-        oItemSchedule.SBQQ__Type__c = 'Range';
-        oItemSchedule.SBQQ__MatchingAttribute__c = 'Ultrafast';
-        oItemSchedule.SBQQ__OrderItem__c = ordItem.Id;
-        oItemSchedule.SBQQ__UnitOfMeasure__c = 'Kwh';
-        oItemSchedule.Name = 'Test';
-
-        insert oItemSchedule;
-
+        SBQQ__OrderItemConsumptionSchedule__c SBQQ_OItem = new SBQQ__OrderItemConsumptionSchedule__c(Name = 'Test',
+                                                                                                     SBQQ__RatingMethod__c ='Tier',
+                                                                                                     SBQQ__Type__c = 'Slab',
+                                                                                                     SBQQ__ConsumptionSchedule__c = ConSch.id,
+                                                                                                     SBQQ__Category__c = 'Rates',
+                                                                                                     SBQQ__OrderItem__c = ordItem.id,
+                                                                                                     SBQQ__BillingTerm__c = 1,
+                                                                                                     SBQQ__BillingTermUnit__c = 'Month',
+                                                                                                     SBQQ__UnitOfMeasure__c = 'Kwh', 
+                                                                                                     SBQQ__MatchingAttribute__c = 'Kwh');
+        Insert SBQQ_OItem;
+            
         blng__UsageSummary__c us = new blng__UsageSummary__c();
         us.blng__Account__c = objAccount.Id;
         us.blng__Order__c = ord.Id;
@@ -107,6 +117,7 @@ public with sharing class CreateUsageSummaryForDailyInvoicingTest {
         us.blng__Subtotal__c = 0;
         us.blng__NextBillingDate__c = Date.today() - 1;
         us.blng__InvoiceRunProcessingStatus__c = 'Pending Billing';
+        us.blng__Status__c = 'Queued For Invoice';
         us.blng__Source__c = 'External';
         insert us;
 
@@ -114,7 +125,6 @@ public with sharing class CreateUsageSummaryForDailyInvoicingTest {
         us1.blng__Account__c = objAccount.Id;
         us1.blng__Order__c = ord.Id;
         us1.blng__OrderProduct__c = ordItem.Id;
-        us1.blng__OrderItemConsumptionSchedule__c = oItemSchedule.Id;
         us1.blng__SummaryStartDate__c = Date.today() + 1;
         us1.blng__SummaryEndDate__c = Date.today() + 1;
         us1.blng__UnbilledQuantity__c = 0;
@@ -130,7 +140,21 @@ public with sharing class CreateUsageSummaryForDailyInvoicingTest {
         
         Test.startTest();
         SchedulableContext sc = null;
+        
         CreateUSForDailyInvoicingScheduleClass ravc = new CreateUSForDailyInvoicingScheduleClass();
+        ravc.execute(sc);
+         //String sch = '0 0 23 * * ?';
+        //system.schedule('Test check', sch, ravc);
+        Test.stopTest();
+        
+    }
+    
+    @IsTest
+    static void createUStest2(){
+        
+        Test.startTest();
+        SchedulableContext sc = null;
+        UsageSummaryWillNotInvoiceSchedule ravc = new UsageSummaryWillNotInvoiceSchedule();
         ravc.execute(sc);
         Test.stopTest();
         

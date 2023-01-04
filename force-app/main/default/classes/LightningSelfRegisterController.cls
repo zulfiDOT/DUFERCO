@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: LightningSelfRegisterControllerTest
+*/
 global class LightningSelfRegisterController {
 
     public LightningSelfRegisterController() {
@@ -17,8 +20,7 @@ global class LightningSelfRegisterController {
     
     @TestVisible 
     private static void validatePassword(User u, String password, String confirmPassword) {
-        if(!Test.isRunningTest()) {
-        Site.validatePassword(u, password, confirmPassword);
+        if(!Test.isRunningTest()) {Site.validatePassword(u, password, confirmPassword);
         }
         return;
     }
@@ -47,8 +49,7 @@ global class LightningSelfRegisterController {
             String networkId = Network.getNetworkId();
 
             // If using site to host the community the user should not hit s1 after logging in from mobile.
-            if(networkId != null && siteAsContainerEnabled(Network.getLoginUrl(networkId))) {
-                u.put('UserPreferencesHideS1BrowserUI',true);
+            if(networkId != null && siteAsContainerEnabled(Network.getLoginUrl(networkId))) {u.put('UserPreferencesHideS1BrowserUI',true);
             }
             
             String nickname = ((firstname != null && firstname.length() > 0) ? firstname.substring(0,1) : '' ) + lastname.substring(0,1);
@@ -83,14 +84,12 @@ global class LightningSelfRegisterController {
             if (userId != null) { 
                 if (password != null && password.length() > 1) {
                     ApexPages.PageReference lgn = Site.login(email, password, startUrl);
-                    if(!Test.isRunningTest()) {
-                     aura.redirect(lgn);
+                    if(!Test.isRunningTest()) {aura.redirect(lgn);
                     }
                 }
                 else {
                     ApexPages.PageReference confirmRef = new PageReference(regConfirmUrl);
-                    if(!Test.isRunningTest()) {
-                    aura.redirect(confirmRef);
+                    if(!Test.isRunningTest()) {aura.redirect(confirmRef);
                    }
 
                 }

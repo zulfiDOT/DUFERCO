@@ -1,6 +1,6 @@
 /*
- *   @Class  :   IdentityServerApiController
- *   @MockClass  :   IdentityServerApiControllerMock
+ *   @Class: IdentityServerApiController
+ *   @MockClass: IdentityServerApiControllerMock
 */
 
 @isTest

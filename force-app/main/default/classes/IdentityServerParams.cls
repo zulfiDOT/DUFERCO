@@ -1,3 +1,7 @@
+/*
+ *   @TestClass: IdentityServerApiControllerTest
+ *   @MockClass: IdentityServerApiControllerMock
+*/
 global class IdentityServerParams {
     
     @AuraEnabled

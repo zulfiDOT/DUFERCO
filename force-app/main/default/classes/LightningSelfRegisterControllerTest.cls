@@ -38,7 +38,7 @@ public with sharing class LightningSelfRegisterControllerTest {
  /* Verifies SelfRegistration flow with an accounId that is created within the test */
  @IsTest
  static void testSelfRegisterWithCreatedAccount() {
-  Account acc = new Account(name = 'test acc');
+  Account acc = new Account(name = 'test acc', recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId());
   insert acc;
   List < Account > accounts = [SELECT Id FROM Account LIMIT 1];
   System.assert(!accounts.isEmpty(), 'There must be at least one account in this environment!');
@@ -74,6 +74,15 @@ public with sharing class LightningSelfRegisterControllerTest {
  static void LightningSelfRegisterControllerInstantiation() {
   LightningSelfRegisterController controller = new LightningSelfRegisterController();
   System.assertNotEquals(controller, null);
+ }
+    
+  @IsTest
+ static void LightningSelfRegisterController_setExperienceId() {
+         
+    String expid = ApexPages.currentPage().getParameters().get('expid'); 
+  	LightningSelfRegisterController.setExperienceId(expid);
+     LightningSelfRegisterController.setExperienceId('TEST');
+    LightningSelfRegisterController.setExperienceId(null);
  }
 
  /* Helper method to initialize the parameters required for SelfRegistration. */

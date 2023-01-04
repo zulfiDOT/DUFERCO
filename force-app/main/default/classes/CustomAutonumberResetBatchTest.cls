@@ -17,4 +17,12 @@ Private Class CustomAutonumberResetBatchTest {
 
      //System.assertEquals('Household', acc.Industry);
     }
+
+    @isTest
+    static void ScheduleCustomAutonumberResetBatch(){
+        Test.startTest();
+        ScheduleCustomAutonumberResetBatch abs= new ScheduleCustomAutonumberResetBatch();
+        abs.execute(null);
+        Test.stopTest();
+    }
 }

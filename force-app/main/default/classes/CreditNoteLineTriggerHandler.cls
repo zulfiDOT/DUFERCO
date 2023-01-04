@@ -1,3 +1,6 @@
+/**
+ * @TestClass: CreditNoteLineTriggerHandlerTest
+ */
 public with sharing class CreditNoteLineTriggerHandler {
 
     public static void setProgressivo(List<blng__CreditNoteLine__c> creditNoteLines) {

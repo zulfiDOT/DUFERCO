@@ -8,10 +8,14 @@ public with sharing class Util_OpenCaseForChangeFieldTest {
     @testSetup
     public static void setup() {
 
+        String ACCOUNT_PERSON_RECORD_TYPE = 'PersonAccount';
         Account acc = new Account();
-        acc.Name = 'Test-Account';
+        //acc.Name = 'Test-Account';
+        acc.FirstName = 'Test';
+        acc.LastName = 'Account';
         acc.DatamaxCustomerCode__c = '1234';
         acc.FiscalCode__c = 'my-fiscal-code';
+        acc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(ACCOUNT_PERSON_RECORD_TYPE).getRecordTypeId();//ACCOUNT_PERSON_RECORD_TYPE_ID;
         insert acc;
         Profile p = [SELECT Id FROM Profile WHERE Name='System Administrator']; 
         User u = new User(Alias = 'testus', Email='testuser@testorg.com', 

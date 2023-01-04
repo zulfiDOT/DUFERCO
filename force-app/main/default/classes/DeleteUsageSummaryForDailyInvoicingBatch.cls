@@ -1,3 +1,6 @@
+/**
+ * @TestClass: CreateUsageSummaryForDailyInvoicingTest
+ */
 public class DeleteUsageSummaryForDailyInvoicingBatch implements Database.Batchable<sObject>{
     
 
@@ -15,9 +18,7 @@ public class DeleteUsageSummaryForDailyInvoicingBatch implements Database.Batcha
 
     public void execute(Database.BatchableContext BC, List<blng__UsageSummary__c> scope){
         
-        if (!scope.isEmpty()) {
-            
-            delete scope;
+        if (!scope.isEmpty()) {delete scope;
         }
     }
    

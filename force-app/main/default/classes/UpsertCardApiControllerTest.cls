@@ -1,6 +1,6 @@
 /*
- *   @Class  :   UpsertCardApiController
- *   @MockClass  :   UpsertCardApiControllerMock
+ *   @Class: UpsertCardApiController
+ *   @MockClass: UpsertCardApiControllerMock
 */
 @isTest
 public class UpsertCardApiControllerTest {

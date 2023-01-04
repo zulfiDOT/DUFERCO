@@ -6,13 +6,13 @@ public with sharing class CreditNoteTriggerHandlerTest {
 
     @TestSetup
     static void makeData(){
-
+        Id recordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Business').getRecordTypeId();
         Account objAccount = new Account(Name = 'Test Acc1', BillingCity = 'Test City', BillingState = 'Test State', 
         BillingStreet = 'Test Street', BillingPostalCode = '12345', 
-        BillingCountry = 'Test Country', Phone = '123456');
+        BillingCountry = 'Test Country', Phone = '123456', RecordTypeId = recordTypeId);
         insert objAccount;
 
-        Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'Qualification');
+        Opportunity opp = new Opportunity(Name = 'Test opp', AccountId = objAccount.Id, CloseDate = Date.today(), StageName = 'New');
         insert opp;
 
         blng__PaymentMethod__c paymentMethod = new blng__PaymentMethod__c();

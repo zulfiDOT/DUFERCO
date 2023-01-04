@@ -22,4 +22,12 @@ public with sharing class LightningForgotPasswordControllerTest {
   LightningForgotPasswordController controller = new LightningForgotPasswordController();
   System.assertNotEquals(controller, null);
  }
+    
+ @IsTest
+ static void LightningForgotPasswordController_setExperienceId() {       
+    String expid = ApexPages.currentPage().getParameters().get('expid'); 
+  	LightningForgotPasswordController.setExperienceId(expid);
+     LightningForgotPasswordController.setExperienceId('TEST');
+    LightningForgotPasswordController.setExperienceId(null);
+ }
 }

@@ -1,3 +1,6 @@
+/*
+ *   @TestClass: WorkOrderTriggerHandlerTest
+*/
 public with sharing class WorkOrderTriggerHandler {
     
     public static void assignToBoQueue (List<WorkOrder> triggerNew, Map<Id, WorkOrder> triggerOldMap) {
