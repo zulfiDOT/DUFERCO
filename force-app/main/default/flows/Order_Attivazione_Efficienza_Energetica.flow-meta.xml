@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <assignments>
+        <name>Activate_funding_request</name>
+        <label>Activate funding request</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Status</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Activated</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Print_Document__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Set_Print_Document</name>
+        <label>Set Print Document</label>
+        <locationX>314</locationX>
+        <locationY>431</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Print_Document__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.PresumedInstallationDate__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>dateFormula</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>is_Installazione_Terminata</name>
+        <label>is Installazione Terminata?</label>
+        <locationX>182</locationX>
+        <locationY>311</locationY>
+        <defaultConnector>
+            <targetReference>Set_Print_Document</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stato_installazione__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Installazione Terminata</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Activate_funding_request</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>Removed Contracted__c = true
+v6: trigger order</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>dateFormula</name>
+        <dataType>String</dataType>
+        <expression>IF( MONTH(TODAY()) = 1 , &apos;Gennaio&apos;, 
+IF( MONTH(TODAY()) = 2 , &apos;Febbraio&apos;, 
+IF( MONTH(TODAY()) = 3 , &apos;Marzo&apos;, 
+IF( MONTH(TODAY()) = 4 , &apos;Aprile&apos;, 
+IF( MONTH(TODAY()) = 5 , &apos;Maggio&apos;,
+IF( MONTH(TODAY()) = 6 , &apos;Giugno&apos;,  
+IF( MONTH(TODAY()) = 7 , &apos;Luglio&apos;, 
+IF( MONTH(TODAY()) = 8 , &apos;Agosto&apos;,
+IF( MONTH(TODAY()) = 9 , &apos;Settemre&apos;, 
+IF( MONTH(TODAY()) = 10 , &apos;Ottobre&apos;,  
+IF( MONTH(TODAY()) = 11 , &apos;Novembre&apos;, 
+IF( MONTH(TODAY()) = 12 , &apos;Dicembre&apos;, 
+
+NULL )
+
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)
+)&amp; &quot; - &quot; &amp; TEXT(YEAR(TODAY()))</expression>
+    </formulas>
+    <interviewLabel>Order - Attivazione Efficienza Energetica {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Order - Attivazione Efficienza Energetica</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>is_Installazione_Terminata</targetReference>
+        </connector>
+        <filterFormula>{!$Record.SBQQ__Quote__r.RecordType.DeveloperName} = &apos;EfficienzaEnergetica&apos; &amp;&amp; OR( ISPICKVAL({!$Record.Stato_installazione__c},&apos;Installazione Terminata&apos;),ISPICKVAL({!$Record.Stato_installazione__c},&apos;Da iniziare pagato&apos;))</filterFormula>
+        <object>Order</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+    <triggerOrder>20</triggerOrder>
+</Flow>

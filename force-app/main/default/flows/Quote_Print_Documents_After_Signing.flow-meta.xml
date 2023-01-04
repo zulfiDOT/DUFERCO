@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Dichiarazione_impossibilit_tecnica_TV</name>
+        <label>Dichiarazione impossibilità tecnica TV</label>
+        <locationX>314</locationX>
+        <locationY>935</locationY>
+        <actionName>SBQQ__Quote__c.Dichiarazione_impossibilita_tecnica_TV</actionName>
+        <actionType>outboundMessage</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+    </actionCalls>
+    <actionCalls>
+        <name>Dichiarazione_impossibilit_tecnica_TV_IVA</name>
+        <label>Dichiarazione impossibilità tecnica TV IVA</label>
+        <locationX>754</locationX>
+        <locationY>935</locationY>
+        <actionName>SBQQ__Quote__c.Dichiarazione_impossibilita_tecnica_IVA</actionName>
+        <actionType>outboundMessage</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+    </actionCalls>
+    <actionCalls>
+        <name>Dichiarazione_installatore_subappalti</name>
+        <label>Dichiarazione installatore subappalti</label>
+        <locationX>446</locationX>
+        <locationY>695</locationY>
+        <actionName>SBQQ__Quote__c.Dichiarazione_installatore_subappalti</actionName>
+        <actionType>outboundMessage</actionType>
+        <connector>
+            <targetReference>TERMO_found</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+    </actionCalls>
+    <actionCalls>
+        <name>Dichiarazione_installatore_subappalti_IVA</name>
+        <label>Dichiarazione installatore subappalti IVA</label>
+        <locationX>886</locationX>
+        <locationY>695</locationY>
+        <actionName>SBQQ__Quote__c.Dichiarazione_installatore_subappaltiIVA</actionName>
+        <actionType>outboundMessage</actionType>
+        <connector>
+            <targetReference>TERMO_found2</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+    </actionCalls>
+    <actionCalls>
+        <name>Moduli_infissi_post_firma</name>
+        <label>Moduli infissi post firma</label>
+        <locationX>50</locationX>
+        <locationY>455</locationY>
+        <actionName>SBQQ__Quote__c.Moduli_infissi_post_firma</actionName>
+        <actionType>outboundMessage</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+    </actionCalls>
+    <apiVersion>56.0</apiVersion>
+    <decisions>
+        <description>Split logica in base al record type dell&apos;account</description>
+        <name>Persona_fisica_giuridica</name>
+        <label>Persona fisica/giuridica</label>
+        <locationX>666</locationX>
+        <locationY>575</locationY>
+        <defaultConnector>
+            <targetReference>Dichiarazione_installatore_subappalti_IVA</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Persona giuridica</defaultConnectorLabel>
+        <rules>
+            <name>Person</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.SBQQ__Account__r.IsPersonAccount</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Dichiarazione_installatore_subappalti</targetReference>
+            </connector>
+            <label>Persona fisica</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Split logica in base al tipo listino EE</description>
+        <name>Pricebook_Type</name>
+        <label>Pricebook Type</label>
+        <locationX>622</locationX>
+        <locationY>335</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>EEin</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.PricebookType__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>EEin</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Moduli_infissi_post_firma</targetReference>
+            </connector>
+            <label>Infissi</label>
+        </rules>
+        <rules>
+            <name>EEim</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.PricebookType__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>EEim</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Termovalvole</targetReference>
+            </connector>
+            <label>Impianti</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Split logica in base a se sono state trovate o meno le termovalvole</description>
+        <name>TERMO_found</name>
+        <label>TERMO found?</label>
+        <locationX>446</locationX>
+        <locationY>815</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Termovalvole</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Dichiarazione_impossibilit_tecnica_TV</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Split logica in base a se sono state trovate o meno le termovalvole</description>
+        <name>TERMO_found2</name>
+        <label>TERMO found?</label>
+        <locationX>886</locationX>
+        <locationY>815</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes2</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Termovalvole</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Dichiarazione_impossibilit_tecnica_TV_IVA</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>Flow di stampa dei documenti post-firma</description>
+    <environments>Default</environments>
+    <interviewLabel>Quote - Print Documents After Signing {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Quote - Print Documents After Signing</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Ricerca tra le quote line del prodotto termovalvole</description>
+        <name>Get_Termovalvole</name>
+        <label>Get Termovalvole</label>
+        <locationX>666</locationX>
+        <locationY>455</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Persona_fisica_giuridica</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SBQQ__Quote__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>SBQQ__ProductCode__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>TERMO</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>SBQQ__QuoteLine__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>496</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Pricebook_Type</targetReference>
+        </connector>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>1 AND (2 OR 3)</filterLogic>
+        <filters>
+            <field>SBQQ__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>3</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>PricebookType__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>EEin</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>PricebookType__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>EEim</stringValue>
+            </value>
+        </filters>
+        <object>SBQQ__Quote__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

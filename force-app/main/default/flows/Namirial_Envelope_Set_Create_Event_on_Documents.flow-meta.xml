@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <assignments>
+        <description>Aggiunta quote alla lista da aggiornare</description>
+        <name>Add_Quote_to_List</name>
+        <label>Add Quote to List</label>
+        <locationX>138</locationX>
+        <locationY>1511</locationY>
+        <assignmentItems>
+            <assignToReference>QuotesToUpdate</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Children</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Children</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>assign_Documents</name>
+        <label>assign Documents</label>
+        <locationX>138</locationX>
+        <locationY>815</locationY>
+        <assignmentItems>
+            <assignToReference>DocumentsToUpdate</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>set</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>set</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>set_Create_Event</name>
+        <label>set Create Event</label>
+        <locationX>138</locationX>
+        <locationY>695</locationY>
+        <assignmentItems>
+            <assignToReference>set.CreateEvent__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>assign_Documents</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Valorizzazione print document a true</description>
+        <name>Set_Print_Document</name>
+        <label>Set Print Document</label>
+        <locationX>138</locationX>
+        <locationY>1391</locationY>
+        <assignmentItems>
+            <assignToReference>Loop_Children.Print_Document__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Add_Quote_to_List</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Has_changed_status</name>
+        <label>Has changed status?</label>
+        <locationX>182</locationX>
+        <locationY>335</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Status__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>get_Document_Records</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>Updates:
+- rimozione azione di chiusura della quote
+- aggiunta azione di valorizzazione del flag Print Document</description>
+    <environments>Default</environments>
+    <interviewLabel>Namirial Envelope - Set Create Event on Documents {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Namirial Envelope - Set Create Event on Documents</label>
+    <loops>
+        <description>Ciclo sui figli per mettere il flag print document</description>
+        <name>Loop_Children</name>
+        <label>Loop Children</label>
+        <locationX>50</locationX>
+        <locationY>1271</locationY>
+        <collectionReference>Get_Children_Quotes</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Set_Print_Document</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Update_Children</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <name>set</name>
+        <label>loop documents</label>
+        <locationX>50</locationX>
+        <locationY>575</locationY>
+        <collectionReference>get_Document_Records</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>set_Create_Event</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>update_Documents</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Se la quote associata alla envelope ha delle figlie, anche queste devono procedere con la generazione dei documenti successivi, se ne hanno</description>
+        <name>Get_Children_Quotes</name>
+        <label>Get Children Quotes</label>
+        <locationX>50</locationX>
+        <locationY>1151</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Children</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ParentQuote__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Quote__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>SBQQ__Quote__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>get_Document_Records</name>
+        <label>get Document Records</label>
+        <locationX>50</locationX>
+        <locationY>455</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>set</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>NamirialEnvelope__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Namirial_Envelope_Document__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <description>Viene rimesso il flag Print Document sulla quote così che possano essere stampati i documenti successivi</description>
+        <name>Print_next_documents</name>
+        <label>Print next documents</label>
+        <locationX>50</locationX>
+        <locationY>1847</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Quote__c</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Print_Document__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <object>SBQQ__Quote__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <description>Salvataggio delle quote figlie</description>
+        <name>Update_Children</name>
+        <label>Update Children</label>
+        <locationX>50</locationX>
+        <locationY>1727</locationY>
+        <connector>
+            <targetReference>Print_next_documents</targetReference>
+        </connector>
+        <inputReference>QuotesToUpdate</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>update_Documents</name>
+        <label>update Documents</label>
+        <locationX>50</locationX>
+        <locationY>1031</locationY>
+        <connector>
+            <targetReference>Get_Children_Quotes</targetReference>
+        </connector>
+        <inputReference>DocumentsToUpdate</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Has_changed_status</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Completed</stringValue>
+            </value>
+        </filters>
+        <object>Namirial_Envelope__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>DocumentsToUpdate</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Namirial_Envelope_Document__c</objectType>
+    </variables>
+    <variables>
+        <description>Lista di quote figlie da aggiornare</description>
+        <name>QuotesToUpdate</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>SBQQ__Quote__c</objectType>
+    </variables>
+</Flow>

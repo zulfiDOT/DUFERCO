@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <description>Valorizzazione dell&apos;istituto finanziario di default per la company Baslab</description>
+        <name>Set_Istituto_Finanziario</name>
+        <label>Set Istituto Finanziario</label>
+        <locationX>490</locationX>
+        <locationY>431</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Bank__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>B128</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <description>Valorizzazione banca di default per EE</description>
+        <name>Set_Istituto_Finanziario_EE</name>
+        <label>Set Istituto Finanziario EE</label>
+        <locationX>50</locationX>
+        <locationY>671</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Bank__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>B063</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <description>Suddivisione della logica del flow in base alla company del billing profile</description>
+        <name>Company</name>
+        <label>Company</label>
+        <locationX>468</locationX>
+        <locationY>311</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Duferco_Energia</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Company__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>1</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Payment_Method</targetReference>
+            </connector>
+            <label>Duferco Energia</label>
+        </rules>
+        <rules>
+            <name>Baslab</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Company__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>8</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Istituto_Finanziario</targetReference>
+            </connector>
+            <label>Baslab</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Split logica per payment method type</description>
+        <name>Payment_Type</name>
+        <label>Payment Type</label>
+        <locationX>182</locationX>
+        <locationY>551</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Bonifico_per_detrazioni_fiscali</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Payment_Method.blng__PaymentType__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>3</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Istituto_Finanziario_EE</targetReference>
+            </connector>
+            <label>Bonifico per detrazioni fiscali</label>
+        </rules>
+    </decisions>
+    <description>Flow di gestione delle logiche before insert per l&apos;oggetto billing profile:
+- Valorizzazione dell&apos;istituto finanziario di default per la company Baslab
+- Valorizzazione dell&apos;istituto finanziario di default per la company EE</description>
+    <environments>Default</environments>
+    <interviewLabel>Billing Profile - Before Insert Logic {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Billing Profile - Before Insert Logic</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Recupero del payment method relazionato con il billing profile</description>
+        <name>Get_Payment_Method</name>
+        <label>Get Payment Method</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Payment_Type</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.PaymentMethod__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>blng__PaymentMethod__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>342</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Company</targetReference>
+        </connector>
+        <object>BillingProfile__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

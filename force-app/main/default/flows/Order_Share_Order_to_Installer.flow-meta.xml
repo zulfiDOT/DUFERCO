@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <description>Aggiunta ID contact nella collection</description>
+        <name>Add_Contact_Id</name>
+        <label>Add Contact Id</label>
+        <locationX>468</locationX>
+        <locationY>575</locationY>
+        <assignmentItems>
+            <assignToReference>ContactsId</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Contacts.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Contacts</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Aggiunta dell&apos;ID utente con share sull&apos;ordine alla collection per il filtro sulla get utenti</description>
+        <name>Add_User_Id</name>
+        <label>Add User Id</label>
+        <locationX>270</locationX>
+        <locationY>1151</locationY>
+        <assignmentItems>
+            <assignToReference>UsersId</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_Order_Share.UserOrGroupId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Order_Share</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Creazione della order share per condividere l&apos;ordine con l&apos;utente partner</description>
+        <name>New_Order_Share</name>
+        <label>New Order Share</label>
+        <locationX>138</locationX>
+        <locationY>1727</locationY>
+        <assignmentItems>
+            <assignToReference>OrderShare.OrderAccessLevel</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Edit</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OrderShare.OrderId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OrderShare.RowCause</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Manual</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OrderShare.UserOrGroupId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Loop_Users.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OrderShareCollection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>OrderShare</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Users</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>Se non ci sono contatti sull&apos;installatore, allora la logica può fermarsi</description>
+        <name>Contacts_found</name>
+        <label>Contacts found?</label>
+        <locationX>380</locationX>
+        <locationY>791</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes_contacts</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Partner_Contacts</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Order_Share</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Se non sono stati trovati utenti, si può interrompere la logica</description>
+        <name>Users_found</name>
+        <label>Users found?</label>
+        <locationX>182</locationX>
+        <locationY>1487</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes_users</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Partner_Users</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Loop_Users</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>Flow che condivide l&apos;ordine con l&apos;installatore, per Efficienza Energetica, quando la quote viene creata dall&apos;agenzia o dal back office</description>
+    <environments>Default</environments>
+    <interviewLabel>Order - Share Order to Installer {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Order - Share Order to Installer</label>
+    <loops>
+        <description>Ciclo sui contatti per salvare gli ID in una collection, per la get sugli users</description>
+        <name>Loop_Contacts</name>
+        <label>Loop Contacts</label>
+        <locationX>380</locationX>
+        <locationY>455</locationY>
+        <collectionReference>Get_Partner_Contacts</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_Contact_Id</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Contacts_found</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Ciclo sugli order share già presenti, per poter filtrare la query sugli utenti</description>
+        <name>Loop_Order_Share</name>
+        <label>Loop Order Share</label>
+        <locationX>182</locationX>
+        <locationY>1031</locationY>
+        <collectionReference>Get_Order_Share</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Add_User_Id</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Get_Partner_Users</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Loop sugli utenti partner per la creazione dello sharing</description>
+        <name>Loop_Users</name>
+        <label>Loop Users</label>
+        <locationX>50</locationX>
+        <locationY>1607</locationY>
+        <collectionReference>Get_Partner_Users</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>New_Order_Share</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Create_OrderShare</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <description>Inserimento degli order share</description>
+        <name>Create_OrderShare</name>
+        <label>Create OrderShare</label>
+        <locationX>50</locationX>
+        <locationY>1943</locationY>
+        <inputReference>OrderShareCollection</inputReference>
+    </recordCreates>
+    <recordLookups>
+        <description>Recupero delle order share già presenti, così da escludere dalla logica gli utenti che già hanno visibilità dell&apos;ordine</description>
+        <name>Get_Order_Share</name>
+        <label>Get Order Share</label>
+        <locationX>182</locationX>
+        <locationY>911</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Order_Share</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>OrderId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>OrderShare</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Recupero dei contatti associati all&apos;installatore dell&apos;ordine</description>
+        <name>Get_Partner_Contacts</name>
+        <label>Get Partner Contacts</label>
+        <locationX>380</locationX>
+        <locationY>335</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Contacts</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Installatore__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Recupero degli utenti partner associati all&apos;installatore dell&apos;ordine</description>
+        <name>Get_Partner_Users</name>
+        <label>Get Partner Users</label>
+        <locationX>182</locationX>
+        <locationY>1367</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Users_found</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ContactId</field>
+            <operator>In</operator>
+            <value>
+                <elementReference>ContactsId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <elementReference>$Record.OwnerId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotIn</operator>
+            <value>
+                <elementReference>UsersId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>User</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>254</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Partner_Contacts</targetReference>
+        </connector>
+        <filterLogic>(1 OR 2) AND 3</filterLogic>
+        <filters>
+            <field>PricebookType__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>EEim</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>PricebookType__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>EEin</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Installatore__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Order</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>Collection di ID dei contatti associati all&apos;installatore dell&apos;ordine</description>
+        <name>ContactsId</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Variabile d&apos;appoggio per la creazione dell&apos;order share</description>
+        <name>OrderShare</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>OrderShare</objectType>
+    </variables>
+    <variables>
+        <description>Collezione di order share da creare</description>
+        <name>OrderShareCollection</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>OrderShare</objectType>
+    </variables>
+    <variables>
+        <description>Collection di ID utenti che hanno già lo share dell&apos;ordine</description>
+        <name>UsersId</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

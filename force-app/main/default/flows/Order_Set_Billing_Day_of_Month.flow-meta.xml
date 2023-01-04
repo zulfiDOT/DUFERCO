@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>53.0</apiVersion>
+    <assignments>
+        <name>Set_Billing_Day_of_Month</name>
+        <label>Set Billing Day of Month</label>
+        <locationX>176</locationX>
+        <locationY>311</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.blng__BillingDayOfMonth__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>DayOfMonth</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.blng__InvoiceBatch__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Pricebook2.Type__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.OwnerId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.SBQQ__Quote__r.OwnerId</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>v2: aggiunta la valorizzazione dell&apos;invoice batch in base al listino associato all&apos;ordine
+v4: aggiunta valorizzazione owner prendendolo dalla quote</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>DayOfMonth</name>
+        <dataType>Number</dataType>
+        <expression>DAY({!$Record.EffectiveDate})</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>Order - Set Billing Day of Month {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Order - Set Billing Day of Month</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Billing_Day_of_Month</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>EffectiveDate</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Order</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

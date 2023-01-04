@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>get_attivo</name>
+        <label>get attivo</label>
+        <locationX>176</locationX>
+        <locationY>455</locationY>
+        <actionName>BatchCaricatoreCondomini</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>caricatore_condominio</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>input</name>
+            <value>
+                <elementReference>InputFlow</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <name>assegnazione_input_flow</name>
+        <label>assegnazione input flow</label>
+        <locationX>176</locationX>
+        <locationY>335</locationY>
+        <assignmentItems>
+            <assignToReference>InputFlow</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>test</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>get_attivo</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Valorizziamo il campo Re-calculate Quote per impostare il valore opposto a quello presente, così che scatti il calculate di CPQ</description>
+        <name>Set_Re_Calculate_Quote_flag</name>
+        <label>Set Re-Calculate Quote flag</label>
+        <locationX>308</locationX>
+        <locationY>815</locationY>
+        <assignmentItems>
+            <assignToReference>Get_Parent_Quote.Re_calculate_Quote__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>ReCalculateQuote</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Parent_Quote</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>caricatore_condominio</name>
+        <label>caricatore condominio?</label>
+        <locationX>176</locationX>
+        <locationY>575</locationY>
+        <defaultConnector>
+            <targetReference>Get_Parent_Quote</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>get_attivo</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>Questo flow ha lo scopo di aggiornare il flag Re-calculate Quote sulla parent quote, in modo che all&apos;aggiornarsi della quote figlia venga aggiornata anche la padre</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Per far partire il calculate sulla quote è sufficiente modificare il campo Re-calculate Quote. Non serve che questo campo sia true, ma è sufficiente che cambi. Con questa formula, valutiamo il valore del campo e restituiamo l&apos;opposto</description>
+        <name>ReCalculateQuote</name>
+        <dataType>Boolean</dataType>
+        <expression>IF({!Get_Parent_Quote.Re_calculate_Quote__c},false,true)</expression>
+    </formulas>
+    <interviewLabel>Quote - Re-calculate Parent Quote {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Quote - Re-calculate Parent Quote</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Recuperiamo la parent quote, per poterla aggiornare</description>
+        <name>Get_Parent_Quote</name>
+        <label>Get Parent Quote</label>
+        <locationX>308</locationX>
+        <locationY>695</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Set_Re_Calculate_Quote_flag</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ParentQuote__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>SBQQ__Quote__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <description>Update della parent quote per far scattare il calculate CPQ</description>
+        <name>Update_Parent_Quote</name>
+        <label>Update Parent Quote</label>
+        <locationX>308</locationX>
+        <locationY>935</locationY>
+        <inputReference>Get_Parent_Quote</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>assegnazione_input_flow</targetReference>
+        </connector>
+        <filterLogic>1 AND 2 AND 4 AND (3 OR 5)</filterLogic>
+        <filters>
+            <field>ParentQuote__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>PricebookType__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Bsb</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>SBQQ__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>0</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>SBQQ__LineItemCount__c</field>
+            <operator>GreaterThan</operator>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </filters>
+        <filters>
+            <field>SBQQ__Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>1</stringValue>
+            </value>
+        </filters>
+        <object>SBQQ__Quote__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>serve solo per evitare errore nel batch dove si trova il metodo invocato:
+The number of results does not match the number of interviews that were executed in a single bulk execution request.</description>
+        <name>InputFlow</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

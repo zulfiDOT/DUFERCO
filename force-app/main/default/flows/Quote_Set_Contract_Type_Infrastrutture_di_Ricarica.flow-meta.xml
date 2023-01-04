@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>54.0</apiVersion>
+    <assignments>
+        <name>Set_Contract_Type_Infrastrutture_di_Ricarica</name>
+        <label>Set Contract Type - Infrastrutture di Ricarica</label>
+        <locationX>176</locationX>
+        <locationY>311</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Tipologia_Contratto__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Infrastrutture_di_Ricarica</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <interviewLabel>Quote - Set Contract Type Infrastrutture di Ricarica {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Quote - Set Contract Type Infrastrutture di Ricarica</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Contract_Type_Infrastrutture_di_Ricarica</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Tipologia_Contratto__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Infrastrutture_di_Ricarica</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>PricebookType__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>IdR</stringValue>
+            </value>
+        </filters>
+        <object>SBQQ__Quote__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+    <triggerOrder>20</triggerOrder>
+</Flow>
